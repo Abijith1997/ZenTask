@@ -1,0 +1,24 @@
+import { useEffect, useState } from "react";
+import { SignIn } from "./Parts/sigin";
+import { SignUp } from "./Parts/signup";
+
+export const Login = () => {
+  const [isSignUpActive, setIsSignUpActive] = useState(false);
+  useEffect(() => {
+    console.log(isSignUpActive);
+  }, [isSignUpActive]);
+  return (
+    <div className="w-screen h-screen flex justify-center items-center relative overflow-hidden background-canvas bg-[conic-gradient(at_top_left,_theme('colors.stone.800'),_theme('colors.stone.600'),_theme('colors.stone.900'))]">
+      <div className="login-container z-40 relative max-w-[clamp(200px,70dvw,400px)] max-h-[clamp(200px,70dvh,500px)] shadow-[2px_2px_5px_rgba(0,0,0,0.3),-2px_-2px_5px_rgba(0,0,0,0.3)] rounded-[12px] flex items-center justify-center bg-primary text-stone-50">
+        <SignIn
+          isSignUpActive={isSignUpActive}
+          setIsSignUpActive={setIsSignUpActive}
+        />
+        <SignUp
+          isSignUpActive={isSignUpActive}
+          setIsSignUpActive={setIsSignUpActive}
+        />
+      </div>
+    </div>
+  );
+};

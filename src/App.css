@@ -1,0 +1,339 @@
+.login-page-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%) rotate(135deg);
+  background-color: #292524;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.canvas-container::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  rotate: 135deg;
+  transform: translate(-0%, -0%);
+  background-color: #292524;
+  width: 100%;
+  height: 100%;
+}
+
+.ball {
+  position: absolute;
+  width: 1%;
+  height: 1%;
+  border-radius: 50%;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Each ball with a different path */
+.ball-1 {
+  animation: moveBall1 6s infinite;
+}
+
+.ball-2 {
+  animation: moveBall2 8s infinite;
+}
+
+.ball-3 {
+  animation: moveBall3 10s infinite;
+}
+
+.ball-4 {
+  animation: moveBall1 6s infinite;
+}
+
+.ball-5 {
+  animation: moveBall2 8s infinite;
+}
+
+.ball-6 {
+  animation: moveBall3 10s infinite;
+}
+
+.bottom-button svg {
+  transition: all 0.3s ease-in-out;
+}
+
+.bottom-button:hover svg {
+  transition: all 0.3s ease-in-out;
+  color: var(--secondary);
+  stroke: var(--secondary);
+}
+
+@keyframes appear-edit {
+  0% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
+}
+
+.delete-button:hover,
+  .edit-button:hover {
+  background-color: inherit;
+}
+
+.done-icon-false {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.done-toggle-display:hover svg {
+  opacity: 1;
+}
+
+.toggle-checkbox:hover .done-icon-false,
+  .done-icon.checked {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.delete-button svg,
+.edit-button svg {
+  transition: transform 0.3s ease-in, fill 0.3s ease-in;
+}
+
+.display-note:hover .bottom-toolbar {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.delete-button:hover svg {
+  transform: scale(1.1);
+  fill: red;
+}
+
+.edit-button:hover svg {
+  transform: scale(1.1);
+  fill: grey;
+  stroke: grey;
+}
+
+
+
+/* Keyframes for movement patterns */
+@keyframes moveBall1 {
+  0% {
+    top: 0%;
+    left: 0%;
+  }
+  
+  25% {
+    top: 0%;
+    left: 90%;
+  }
+  
+  50% {
+    top: 90%;
+    left: 90%;
+  }
+  
+  75% {
+    top: 90%;
+    left: 0%;
+  }
+  
+  100% {
+    top: 0%;
+    left: 0%;
+  }
+}
+
+@keyframes moveBall2 {
+  0% {
+    top: 50%;
+    left: 0%;
+  }
+  
+  25% {
+    top: 0%;
+    left: 50%;
+  }
+  
+  50% {
+    top: 50%;
+    left: 100%;
+  }
+  
+  75% {
+    top: 100%;
+    left: 50%;
+  }
+  
+  100% {
+    top: 50%;
+    left: 0%;
+  }
+}
+
+@keyframes moveBall3 {
+  0% {
+    top: 0%;
+    left: 50%;
+  }
+  
+  20% {
+    top: 25%;
+    left: 75%;
+  }
+  
+  40% {
+    top: 50%;
+    left: 50%;
+  }
+  
+  60% {
+    top: 75%;
+    left: 25%;
+  }
+  
+  80% {
+    top: 100%;
+    left: 50%;
+  }
+  
+  100% {
+    top: 0%;
+    left: 50%;
+  }
+}
+
+.gemini-loading {
+  background: linear-gradient(
+  45deg,
+  var(--background) 0%,
+  var(--primary) 20%,
+  var(--secondary) 40%,
+  var(--secondary) 60%,
+  var(--primary) 80%,
+  var(--background) 100%
+  );
+  background-size: 500% 100%;
+  animation: shimmer 10s infinite linear;
+}
+
+/* Keyframes for shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-button {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-track-piece {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-track-piece:vertical {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-track-piece:horizontal {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-corner:vertical {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-corner:horizontal {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-thumb:vertical {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+*::-webkit-scrollbar-thumb:horizontal {
+  background: transparent;
+  /* Optional: just make scrollbar invisible */
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.gemini-response::before {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(
+  from var(--angle) at 50% 50%,
+  #8b5cf6,
+  #ec4899,
+  #22d3ee,
+  #8b5cf6
+  );
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  animation: spin-conic 4s linear infinite;
+}
+
+@keyframes spin-conic {
+  from {
+    --angle: 0deg;
+  }
+  
+  to {
+    --angle: 360deg;
+  }
+}
+
