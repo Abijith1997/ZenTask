@@ -23,7 +23,7 @@ export const Navbar = ({ user }: { user: User }) => {
       console.error("Error logging out:", error.message);
     } else {
       console.log("Logged out successfully!");
-      navigate("/");
+      navigate("/login");
     }
   };
   const handleNavigation = () => {

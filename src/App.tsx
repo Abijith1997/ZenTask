@@ -35,6 +35,7 @@ function App() {
       <Provider store={store}>
         <Router>
           <Routes>
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={user ? <Home user={user} /> : <Login />} />
           </Routes>
         </Router>
