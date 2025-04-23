@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { GoogleGenAI } from "@google/genai";
 import { Task } from "@/Interface/Types";
 import { Input } from "@/components/ui/input";
@@ -23,6 +22,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
   const generateGeminiResponse = async () => {
     setLoading(true);
     const timeNow = new Date();
+    const timeOffset = timeNow.getTimezoneOffset();
     console.log(
       homeTasks.map((task) => {
         if (task.Due) new Date(task.Due);
@@ -44,7 +44,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
         })
         .join(" ");
     }
-    const generalPrompt = `The now is ${timeNow}. Provide the response as a html body element. 
+    const generalPrompt = `The now is ${timeOffset}. Provide the response as a html body element. 
     Omit the head, html, and body tags. 
     Only provide answers inside div elements using classes and relevant inner tags. 
     This is for use in a dynamic webpage. 

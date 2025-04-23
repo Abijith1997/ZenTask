@@ -11,6 +11,26 @@
   justify-content: center;
 }
 
+.gemini-svg::before {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  background: conic-gradient(
+  from var(--angle) at 50% 50%,
+  #8b5cf6,
+  #ec4899,
+  #22d3ee,
+  #8b5cf6
+  );
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  animation: spin-conic 4s linear infinite;
+  border-radius: 14px;
+}
+
 .canvas-container::before {
   content: "";
   position: fixed;

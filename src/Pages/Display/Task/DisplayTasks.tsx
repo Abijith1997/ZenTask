@@ -13,6 +13,8 @@ import { updateTaskInDB, updateTaskLocally } from "@/Slices/TodoSlice";
 import { cn } from "@/lib/utils";
 import { DateTimePicker } from "../../Home/MainApp/CreateNew/AddNew/Task/DateTime/DateTime";
 import { deleteTask } from "./taskFunctions";
+import { GeminiSVG } from "@/SVG/SVGs";
+import { GoogleGenAI } from "@google/genai";
 
 interface DisplayTasksProps {
   task: Task;
@@ -37,6 +39,13 @@ export const DisplayTasks = ({
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const innerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
+  const VITE_GEMINI_API_KEY: string = import.meta.env.VITE_GEMINI_API_KEY!;
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState("");
+
+  const ai = new GoogleGenAI({
+    apiKey: VITE_GEMINI_API_KEY,
+  });
 
   const getDueColor = (minutesUntilDue: number) => {
     if (!checked) {
@@ -159,11 +168,71 @@ export const DisplayTasks = ({
     deleteTask(task.id, dispatch);
   };
 
+  const invokeGemini = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const timeNow = new Date();
+    const timeOffset = timeNow.getTimezoneOffset();
+    const generalPrompt = `The current time is ${timeNow.toString()} (with timezone offset ${timeOffset} minutes from UTC). 
+My task is titled "${task.Title}"${
+      task.description ? `, with the description: ${task.description}` : ""
+    }${task.Due ? `, and it is due at ${task.Due}` : ""}. 
+Provide an approach to finish the task in the given time I have.
+Respond with an HTML snippet inside a <div> (do not include <html>, <head>, <style> <script>, or <body> tags). 
+Use relevant classes and nested tags for structure and styling, but don't provide styling. 
+Speak casually and naturally as if you're talking to a person. 
+When referencing time, convert it to my **local timezone**, and phrase it in a human-friendly way (e.g., "tomorrow at 4 PM"). 
+**Do not** mention UTC, GMT, or other timezone acronyms.`;
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: generalPrompt,
+              },
+            ],
+          },
+        ],
+      });
+      let cleanedResponse = "";
+      if (response.text) {
+        cleanedResponse = response.text
+          .replace(/<!DOCTYPE html>.*<body>/s, "") // Remove everything before <body>
+          .replace(/<\/body>.*<\/html>/s, "") // Remove everything after </body>
+          .replace(/```html/s, "") // Remove ```html
+          .replace(/```/s, "") // Remove ```
+          .replace(/<script>.*<\/script>/s, "") // Remove any <script> tags
+          .replace(/"/g, "'") // Replace all double quotes with single quotes
+          .replace(/\n/g, "") // Remove all newline characters
+          .replace(/<body>/g, "") // Remove <body> tag
+          .replace(/<\/body>/g, ""); // Remove </body> tag
+      }
+      setResponse(cleanedResponse);
+    } catch (error) {
+      console.error("Gemini error:", error);
+    } finally {
+      setLoading(false);
+      console.log("response", response);
+    }
+  };
+
   return (
     <div
-      className="outer-display-task w-full flex items-center justify-center p-4 transition-all duration-300 ease-in-out text-[var(--text-color)]"
+      className="outer-display-task w-full flex items-center justify-center p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] gap-5"
       ref={outerRef}
     >
+      <div
+        className="relative gemini-svg w-auto h-auto rounded-3xl p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110"
+        onClick={(e) => invokeGemini(e)}
+      >
+        <div className="gemini-svg-inner w-[22px] z-10 bg-secondary rounded-3xl p-1">
+          <GeminiSVG />
+        </div>
+      </div>
+
       <div
         className="display-task p-5 break-inside-avoid flex flex-col justify-start items-start rounded-[12px] bg-secondary w-[90%] h-auto transition-all duration-300 ease-in-out cursor-pointer relative z-10 hover:shadow-md hover:scale-[1.01] "
         ref={innerRef}
@@ -230,17 +299,17 @@ export const DisplayTasks = ({
                 )}
               </>
             ) : (
-              <div className="title-description w-full">
+              <div className="title-description w-full !text-[var(--text-color)]">
                 <h2
                   className={cn(
-                    "task-title break-words uppercase",
+                    "task-title break-words uppercase ",
                     checked ? "line-through" : ""
                   )}
                 >
                   {editTitle}
                 </h2>
                 {editDescription && (
-                  <p className="text-xs">{editDescription}</p>
+                  <p className="text-xs text-white">{editDescription}</p>
                 )}
                 {selectedTime &&
                   (() => {
@@ -309,6 +378,13 @@ export const DisplayTasks = ({
             )}
           </div>
         </div>
+        {loading && <div>Loading...</div>}
+        {response && (
+          <div
+            className="!text-md gemini-response-diplay-task"
+            dangerouslySetInnerHTML={{ __html: response }}
+          ></div>
+        )}
       </div>
     </div>
   );
