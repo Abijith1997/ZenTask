@@ -56,15 +56,15 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
           {image && <img className="w-full h-full" src={image}></img>}
         </div>
 
-        <h1 className="note-display-title text-center !text-lg">
-          {note?.Title} {note?.Pinned}
+        <h1 className="note-display-title text-center !text-lg font-bold">
+          {note?.Title}
         </h1>
         <p
           className="note-display-text text-xs text-left break-words mb-4 max-w-[400px]"
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(content || ""),
+            __html: DOMPurify.sanitize(content),
           }}
-        />
+        ></p>
         <div
           className="bottom-toolbar text-primary opacity-0 absolute w-full mb-2 h-8 bottom-0 left-0 rounded-b-lg flex fill-primary items-center justify-between p-2 gap-2 transition-opacity duration-300 ease-in-out"
           ref={bottomToolbar}
