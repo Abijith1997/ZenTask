@@ -3,14 +3,20 @@ import { NoteList } from "@/Pages/Display/Note/NoteList";
 import { setNotes } from "@/Slices/NoteSlice";
 import { supabase } from "@/supabaseClient";
 import { User } from "@supabase/supabase-js";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PinnedNotes } from "./PinnedNotes";
+import { Note } from "@/Interface/Types";
+import { RootState } from "@/Store";
 
 interface NotePageProps {
   user: User;
 }
 
 export const NotePage = ({ user }: NotePageProps) => {
+  const [localNotes, setLocalNotes] = useState<Note[]>([]);
+  const [pinnedNotes, setPinnedNotes] = useState<Note[]>([]);
+  const noteList = useSelector((state: RootState) => state.note.notes);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,10 +39,21 @@ export const NotePage = ({ user }: NotePageProps) => {
     fetchNotes();
   }, [user]);
 
+  useEffect(() => {
+    const filteredNotes = noteList.filter((note) => !note.Pinned);
+    setLocalNotes(filteredNotes);
+  }, [noteList]);
+
+  useEffect(() => {
+    const filteredNotes = noteList.filter((note) => note.Pinned);
+    setPinnedNotes(filteredNotes);
+  }, [localNotes]);
+
   return (
     <div className="note-page flex flex-col items-center p-8 min-h-screen justify-start box-border mt-16  top-0 right-0 ml-24 w-[calc(100%_-_6rem)] overflow-y-auto">
       <InstantNote />
-      <NoteList />
+      <PinnedNotes pinnedNotes={pinnedNotes} />
+      <NoteList localNotes={localNotes} />
     </div>
   );
 };

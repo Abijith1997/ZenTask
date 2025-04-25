@@ -23,6 +23,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
     setLoading(true);
     const timeNow = new Date();
     const timeOffset = timeNow.getTimezoneOffset();
+    console.log(timeOffset);
     console.log(
       homeTasks.map((task) => {
         if (task.Due) new Date(task.Due);
@@ -44,13 +45,15 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
         })
         .join(" ");
     }
-    const generalPrompt = `The now is ${timeOffset}. Provide the response as a html body element. 
+    const generalPrompt = `The current time is ${timeNow.toString()} (with timezone offset ${timeOffset} minutes from UTC). 
+    Provide the response as a html body element. 
     Omit the head, html, and body tags. 
     Only provide answers inside div elements using classes and relevant inner tags. 
     This is for use in a dynamic webpage. 
     Also if sending back time, say the time as a normal person. Use my timezone and omit the usage of UTC, CET etc.
     The content should be as you talk to a human.`;
-
+    console.log(taskPrompt);
+    console.log(generalPrompt);
     try {
       const response = await ai.models.generateContent({
         model: "gemini-1.5-flash",

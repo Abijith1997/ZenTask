@@ -1,18 +1,11 @@
 import { Note } from "@/Interface/Types";
-import { RootState } from "@/Store";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { DisplayNotes } from "./DisplayNotes";
 
-export const NoteList = () => {
-  const [localNotes, setLocalNotes] = useState<Note[]>([]);
-  const noteList = useSelector((state: RootState) => state.note.notes);
+interface NoteListProps {
+  localNotes: Note[];
+}
 
-  useEffect(() => {
-    console.log("noteList has changed");
-    setLocalNotes(noteList);
-  }, [noteList]);
-
+export const NoteList = ({ localNotes }: NoteListProps) => {
   return (
     <div className="note-whole-list flex flex-col items-center p-4 justify-start w-full h-full flex-[0_0_50%]">
       <h1 className="!text-2xl font-bold" style={{ marginBottom: "1rem" }}>

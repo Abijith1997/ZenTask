@@ -11,6 +11,16 @@
   justify-content: center;
 }
 
+.gemini-parser h1 {
+  font-size: 1rem !important;
+}
+
+.gemini-parser div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .gemini-svg::before {
   position: absolute;
   content: '';

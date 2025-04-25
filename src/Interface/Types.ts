@@ -6,6 +6,7 @@ export interface Task {
   completed: boolean;
   created_at: string;
   Due: string | null;
+  Gemini_ID: string | null;
 }
 
 export interface Note {
@@ -17,4 +18,23 @@ export interface Note {
   Pinned: boolean;
   updatedAt: string;
   Image: string | null;
+}
+
+export interface DisplayTasksProps {
+  task: Task;
+  checked: boolean;
+  setChecked: (value: boolean) => void;
+}
+
+export interface dueColorProps {
+  minutesUntilDue: number;
+  checked: boolean;
+}
+
+export interface handleCheckProps {
+  checked: boolean;
+  setChecked: (value: boolean) => void;
+  task: Task;
+  dispatch: any;
+  tasks: Task[];
 }

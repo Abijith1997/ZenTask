@@ -49,7 +49,7 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
   return (
     <>
       <div
-        className="display-note mb-2 p-2 bg-secondary text-primary max-w-[400px] relative pb-6 !important break-inside-avoid flex flex-col hover:scale-101 hover:shadow-lg justify-start items-start w-[300px] h-auto rounded-lg shadow-md duration-300 ease-in-out transition-shadow will-change-transform cursor-pointer"
+        className="display-note mb-2 p-2 bg-secondary text-[var(--primary-1)] max-w-[400px] relative pb-6 !important break-inside-avoid flex flex-col hover:scale-101 hover:shadow-lg justify-start items-start w-[300px] h-auto rounded-lg shadow-md duration-300 ease-in-out transition-shadow will-change-transform cursor-pointer"
         onClick={handleEdit}
       >
         <div className="image-note-display">

@@ -89,6 +89,7 @@ export const AddTask = ({
           completed: false,
           created_at: new Date().toISOString(),
           Due: formattedTime || null,
+          Gemini_ID: null,
         };
 
         dispatch(insertTasks(newTask));

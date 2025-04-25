@@ -8,19 +8,21 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { format, formatDistanceToNow, differenceInMinutes } from "date-fns";
-import { Task } from "@/Interface/Types";
-import { updateTaskInDB, updateTaskLocally } from "@/Slices/TodoSlice";
+import { DisplayTasksProps } from "@/Interface/Types";
 import { cn } from "@/lib/utils";
 import { DateTimePicker } from "../../Home/MainApp/CreateNew/AddNew/Task/DateTime/DateTime";
-import { deleteTask } from "./taskFunctions";
+import {
+  deleteTask,
+  getDueColor,
+  handleCheck,
+  handleSave,
+} from "./Parts/Functions/taskFunctions";
 import { GeminiSVG } from "@/SVG/SVGs";
-import { GoogleGenAI } from "@google/genai";
-
-interface DisplayTasksProps {
-  task: Task;
-  checked: boolean;
-  setChecked: (value: boolean) => void;
-}
+import { GeminiHTMLViewer } from "./Parts/GeminiParser";
+import {
+  handleGeminiSave,
+  invokeGemini,
+} from "./Parts/Functions/GeminiFunctions";
 
 export const DisplayTasks = ({
   task,
@@ -39,22 +41,11 @@ export const DisplayTasks = ({
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const innerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
-  const VITE_GEMINI_API_KEY: string = import.meta.env.VITE_GEMINI_API_KEY!;
+  const button =
+    "border-1 text-xs border-background bg-background hover:border-1 transition-all hover:border-background hover:bg-secondary hover:text-primary hover:transition-all";
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
-
-  const ai = new GoogleGenAI({
-    apiKey: VITE_GEMINI_API_KEY,
-  });
-
-  const getDueColor = (minutesUntilDue: number) => {
-    if (!checked) {
-      if (minutesUntilDue < 0) return "red"; // Overdue
-      if (minutesUntilDue < 60) return "orange"; // Due in < 1 hour
-      if (minutesUntilDue < 1440) return "yellow"; // Due within a day
-      return "green"; // More than a day left
-    }
-  };
+  const [generateNew, setGenerateNew] = useState(false);
 
   useEffect(() => {
     setChecked(task.completed);
@@ -91,13 +82,27 @@ export const DisplayTasks = ({
         editorRef.current &&
         !editorRef.current.contains(event.target as Node)
       ) {
-        handleSave();
+        handleSave({
+          selectedTime,
+          dispatch,
+          task,
+          editTitle,
+          editDescription,
+          setIsEditing,
+        });
       }
     }
 
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        handleSave();
+        handleSave({
+          selectedTime,
+          dispatch,
+          task,
+          editTitle,
+          editDescription,
+          setIsEditing,
+        });
       }
     }
 
@@ -112,111 +117,49 @@ export const DisplayTasks = ({
     };
   }, [isEditing, editTitle, editDescription, selectedTime]);
 
-  const handleCheck = async () => {
-    const newChecked = !checked;
-    setChecked(newChecked);
-    const updatedTask = { ...task, completed: checked };
-    const updatedTasks = tasks.map((t) => (t.id === task.id ? updatedTask : t));
-
-    dispatch(updateTaskLocally(updatedTasks));
-    try {
-      await dispatch(
-        updateTaskInDB({
-          id: task.id,
-          updates: { completed: newChecked },
-        })
-      );
-    } catch (error) {
-      setChecked(!newChecked);
-      console.error("Failed to update task:", error);
-    }
-  };
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleSave = async () => {
-    setTimeout(async () => {
-      try {
-        const dueToUpdate = selectedTime?.trim()
-          ? new Date(selectedTime).toISOString()
-          : null;
-
-        await dispatch(
-          updateTaskInDB({
-            id: task.id,
-            updates: {
-              Title: editTitle,
-              description: editDescription.trim() || null,
-              Due: dueToUpdate,
-            },
-          })
-        );
-        setIsEditing(false);
-      } catch (err) {
-        console.error("Failed to update task:", err);
-      }
-    }, 100);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSave();
+    if (e.key === "Enter")
+      handleSave({
+        selectedTime,
+        dispatch,
+        task,
+        editTitle,
+        editDescription,
+        setIsEditing,
+      });
   };
 
   const handleDelete = () => {
     deleteTask(task.id, dispatch);
   };
 
-  const invokeGemini = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const timeNow = new Date();
-    const timeOffset = timeNow.getTimezoneOffset();
-    const generalPrompt = `The current time is ${timeNow.toString()} (with timezone offset ${timeOffset} minutes from UTC). 
-My task is titled "${task.Title}"${
-      task.description ? `, with the description: ${task.description}` : ""
-    }${task.Due ? `, and it is due at ${task.Due}` : ""}. 
-Provide an approach to finish the task in the given time I have.
-Respond with an HTML snippet inside a <div> (do not include <html>, <head>, <style> <script>, or <body> tags). 
-Use relevant classes and nested tags for structure and styling, but don't provide styling. 
-Speak casually and naturally as if you're talking to a person. 
-When referencing time, convert it to my **local timezone**, and phrase it in a human-friendly way (e.g., "tomorrow at 4 PM"). 
-**Do not** mention UTC, GMT, or other timezone acronyms.`;
-    try {
-      const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: [
-          {
-            role: "user",
-            parts: [
-              {
-                text: generalPrompt,
-              },
-            ],
-          },
-        ],
-      });
-      let cleanedResponse = "";
-      if (response.text) {
-        cleanedResponse = response.text
-          .replace(/<!DOCTYPE html>.*<body>/s, "") // Remove everything before <body>
-          .replace(/<\/body>.*<\/html>/s, "") // Remove everything after </body>
-          .replace(/```html/s, "") // Remove ```html
-          .replace(/```/s, "") // Remove ```
-          .replace(/<script>.*<\/script>/s, "") // Remove any <script> tags
-          .replace(/"/g, "'") // Replace all double quotes with single quotes
-          .replace(/\n/g, "") // Remove all newline characters
-          .replace(/<body>/g, "") // Remove <body> tag
-          .replace(/<\/body>/g, ""); // Remove </body> tag
-      }
-      setResponse(cleanedResponse);
-    } catch (error) {
-      console.error("Gemini error:", error);
-    } finally {
-      setLoading(false);
-      console.log("response", response);
-    }
+  const callHandleCheck = () => {
+    handleCheck({
+      checked,
+      setChecked,
+      task,
+      tasks,
+      dispatch,
+    });
+  };
+
+  const callHandleGeminiSave = () => {
+    handleGeminiSave({
+      response,
+      dispatch,
+      task,
+    });
+  };
+
+  const callHandleSave = () => {
+    handleSave({
+      selectedTime,
+      dispatch,
+      task,
+      editTitle,
+      editDescription,
+      setIsEditing,
+    });
   };
 
   return (
@@ -226,7 +169,16 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
     >
       <div
         className="relative gemini-svg w-auto h-auto rounded-3xl p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110"
-        onClick={(e) => invokeGemini(e)}
+        onClick={(e) =>
+          invokeGemini({
+            e,
+            setGenerateNew,
+            setResponse,
+            setLoading,
+            response,
+            task,
+          })
+        }
       >
         <div className="gemini-svg-inner w-[22px] z-10 bg-secondary rounded-3xl p-1">
           <GeminiSVG />
@@ -248,7 +200,7 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
               "transition-all ease-in-out duration-300": true,
             }
           )}
-          onDoubleClick={handleEdit}
+          onDoubleClick={() => setIsEditing(!isEditing)}
         >
           <div
             ref={editorRef}
@@ -280,10 +232,12 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
                       className="task-description-input resize-none border-0 shadow-sm rounded-lg flex text-sm p-4"
                       placeholder="Add description..."
                     />
-                    <DateTimePicker
-                      setSelectedTime={setSelectedTime}
-                      selectedTime={selectedTime}
-                    />
+                    <div className="date-editor bg-red-500 rounded-lg w-[fit-content]">
+                      <DateTimePicker
+                        setSelectedTime={setSelectedTime}
+                        selectedTime={selectedTime}
+                      />
+                    </div>
                   </>
                 )}
 
@@ -318,7 +272,7 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
                       dueDate,
                       new Date()
                     );
-                    const color = getDueColor(minutesUntilDue);
+                    const color = getDueColor({ minutesUntilDue, checked });
 
                     return (
                       <p className={cn("text-xs", color)}>
@@ -332,58 +286,77 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
               </div>
             )}
           </div>
-          <div className="manipulation-group flex items-center justify-center ">
-            <div className="delete-task relative flex items-center justify-center gap-0">
-              <button
-                className="edit-button duration-300 ease-in-out transition-all scale-100"
-                onClick={handleEdit}
-              >
-                {isEditing ? (
-                  <IconX
-                    className="close-icon duration-300 ease-in-out transition-all scale-100"
-                    size={15}
-                  />
-                ) : (
-                  <IconPencil className="edit-icon" size={15} />
-                )}
-              </button>
+          <div className="manipulation-group flex items-center justify-center flex-col gap-5">
+            <div>
+              <div className="delete-task relative flex items-center justify-center gap-0">
+                <button
+                  className="edit-button duration-300 ease-in-out transition-all scale-100"
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  {isEditing ? (
+                    <IconX
+                      className="close-icon duration-300 ease-in-out transition-all scale-100"
+                      size={15}
+                    />
+                  ) : (
+                    <IconPencil className="edit-icon" size={15} />
+                  )}
+                </button>
 
-              <button className="delete-button" onClick={handleDelete}>
-                <IconTrashFilled className="delete-icon" size={15} />
-              </button>
-            </div>
-            <div
-              className="toggle-checkbox relative w-auto gap-4 h-full flex items-center justify-between hover:opacity-100"
-              role="checkbox"
-              aria-checked={checked}
-              tabIndex={0}
-            >
-              <span
-                className="done-toggle-display rounded-full border border-[var(--mantine-primary-4)] flex items-center justify-center mr-2 ml-2 p-[1px]"
-                onClick={handleCheck}
-              >
-                <IconCheck
-                  size={15}
-                  className={checked ? `done-icon-true` : `done-icon-false`}
-                />
-              </span>
+                <button className="delete-button" onClick={handleDelete}>
+                  <IconTrashFilled className="delete-icon" size={15} />
+                </button>
+
+                <div
+                  className="toggle-checkbox relative w-auto gap-4 h-full flex items-center justify-between hover:opacity-100"
+                  role="checkbox"
+                  aria-checked={checked}
+                  tabIndex={0}
+                >
+                  <span
+                    className="done-toggle-display rounded-full border border-[var(--mantine-primary-4)] flex items-center justify-center mr-2 ml-2 p-[1px]"
+                    onClick={() => callHandleCheck()}
+                  >
+                    <IconCheck
+                      size={15}
+                      className={checked ? `done-icon-true` : `done-icon-false`}
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
             {isEditing && (
-              <button
-                className="save-button focus:outline-none focus:shadow-[0_0_0_3px_rgba(0,123,255,0.5)] px-4 py-2 border-none rounded-md text-sm cursor-pointer transition duration-200 ease-in-out transform box-shadow-md animate-appear-edit"
-                onClick={handleSave}
-              >
+              <button className={button} onClick={() => callHandleSave()}>
                 Save
               </button>
             )}
           </div>
         </div>
-        {loading && <div>Loading...</div>}
-        {response && (
-          <div
-            className="!text-md gemini-response-diplay-task"
-            dangerouslySetInnerHTML={{ __html: response }}
-          ></div>
+
+        {task.Gemini_ID && !generateNew ? (
+          <GeminiHTMLViewer url={task.Gemini_ID} />
+        ) : (
+          <>
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                {response && (
+                  <div className="gemini-generated flex items-end justify-between w-full px-10">
+                    <div
+                      className="!text-md gemini-response-diplay-task"
+                      dangerouslySetInnerHTML={{ __html: response }}
+                    />
+                    <div className="save-gemini">
+                      <button className={button} onClick={callHandleGeminiSave}>
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
