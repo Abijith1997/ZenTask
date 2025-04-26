@@ -102,18 +102,21 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
 
   return (
     <>
-      <div className="whole-gemini w-[90%] p-4 flex flex-col items-center justify-center gap-2 z-0">
+      <div className="whole-gemini w-full sm:w-[90%]  p-2 sm:p-4 flex flex-col items-center justify-center gap-2 z-0">
         <form
           onSubmit={handleGemini}
           className="gemini-form w-[90%] p-4 flex justify-center items-center gap-2"
         >
           <Input
-            className="gemini-input mt-[20] flex-1 max-w-[90%]"
+            className="gemini-input mt-[20] flex-1 max-w-[90%] sm:placeholder:text-xs text-[0.75rem]"
             placeholder="Ask something like 'Help me prioritize...'"
             type="text"
             onChange={(e) => setQuestion(e.target.value)}
           />
-          <Button className="gemini-ask-button mt-[20] h-[35px]" type="submit">
+          <Button
+            className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem]"
+            type="submit"
+          >
             Ask Gemini
           </Button>
         </form>

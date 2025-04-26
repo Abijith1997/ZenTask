@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./Pages/Login_Page/login";
 import { Home } from "./Pages/Home/Home";
 import { store } from "./Store";
-import { Profile } from "./Pages/Profile/Profile";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -37,7 +36,6 @@ function App() {
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/" element={user ? <Home user={user} /> : <Login />} />
           </Routes>
         </Router>

@@ -10,6 +10,7 @@ import { Navbar } from "../Navbar/Navbar";
 import { MainApp } from "./MainApp/MainApp";
 import { NotePage } from "./MainApp/NotePage/NotePage";
 import { TaskPage } from "./MainApp/TaskPage/TaskPage";
+import { Profile } from "../Profile/Profile";
 
 export const Home = ({ user }: { user: User }) => {
   const [currentPage, setCurrentPage] = useState<string>("Main");
@@ -88,41 +89,41 @@ export const Home = ({ user }: { user: User }) => {
     const mainApp = document.querySelector(".main-app");
     const TaskPage = document.querySelector(".task-page");
     const NotePage = document.querySelector(".note-page");
-    // const CalenderPage = document.querySelector(".calender-page");
+    const ProfilePage = document.querySelector(".profile-page");
 
     switch (currentPage) {
       case "Main": {
         TaskPage?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         mainApp?.classList.remove("inactive");
-        // CalenderPage?.classList.add("inactive");
         break;
       }
       case "Note": {
         NotePage?.classList.remove("inactive");
         TaskPage?.classList.add("inactive");
         mainApp?.classList.add("inactive");
-        // CalenderPage?.classList.add("inactive");
+        ProfilePage?.classList.add("hidden");
         break;
       }
       case "Task": {
         TaskPage?.classList.remove("inactive");
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
-        // CalenderPage?.classList.add("inactive");
+        ProfilePage?.classList.add("hidden");
         break;
       }
-      case "Calender": {
-        // CalenderPage?.classList.remove("inactive");
+      case "Profile": {
         TaskPage?.classList.add("inactive");
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
+        ProfilePage?.classList.remove("hidden");
         break;
       }
 
       default:
         TaskPage?.classList.add("inactive");
         NotePage?.classList.add("inactive");
+        ProfilePage?.classList.add("hidden");
     }
   }, [currentPage]);
 
@@ -156,6 +157,8 @@ export const Home = ({ user }: { user: User }) => {
           <TaskPage user={user} />
         ) : currentPage === "Note" ? (
           <NotePage user={user} />
+        ) : currentPage === "Profile" ? (
+          <Profile user={user} />
         ) : null}
       </div>
     </div>

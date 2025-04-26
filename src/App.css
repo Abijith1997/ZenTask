@@ -19,9 +19,24 @@
   transition: transform 0.3s ease-in-out;
 }
 
+.edit-profile svg {
+  opacity: 0;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.user-profile-img:hover .edit-profile svg {
+  opacity: 1;
+}
+
 .caret-down-icon.open {
   transform: rotate(180deg);
   transition: transform 0.3s ease-in-out;
+}
+
+.canvas-svg svg {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
 }
 
 .gemini-parser div {

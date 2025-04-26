@@ -32,13 +32,14 @@ import { handleNavigation } from "../Functions/Functions";
 import { useState } from "react";
 
 interface NavbarProps {
-  user: User;
+  user: User | null;
   setCurrentPage: (value: string) => void;
 }
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const svgColor = "#e9ecef";
   const [open, setOpen] = useState(false);
+  const [openDDM, setOpenDDM] = useState(false);
   // const [profileOpen, setProfileOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleLogOut = async () => {
@@ -50,12 +51,17 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
       navigate("/login");
     }
   };
+
   const callHandleNavigation = (page: string) => {
     handleNavigation({ page, setCurrentPage });
     setOpen(false);
   };
 
-  const handleProfile = () => {};
+  const handleProfile = () => {
+    setCurrentPage("Profile");
+    setOpen(false);
+    setOpenDDM(false);
+  };
 
   return (
     <>
@@ -76,7 +82,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
             <ThemeToggle />
           </div>
           <div className="dropdown p-3">
-            <DropdownMenu>
+            <DropdownMenu open={openDDM} onOpenChange={setOpenDDM}>
               <DropdownMenuTrigger asChild>
                 <div className="user-ddm cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 w-[2.2rem] rounded-full">
                   <Avatar>
@@ -90,7 +96,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
               <DropdownMenuContent className="flex flex-col items-center justify-center gap-2 mr-[1rem] mt-[0.5rem] bg-secondary p-[1rem] rounded-sm w-[100%] right-10 translate-x-[-1rem]">
                 <Button
                   className="flex justify-center items-center w-full settings-button"
-                  // onClick={handleNavigation()}
+                  onClick={() => handleProfile()}
                 >
                   Settings
                 </Button>
@@ -170,7 +176,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
                     <Button
                       variant={"outline"}
                       className="nav-button w-full flex items-center justify-center"
-                      onClick={() => handleProfile()}
+                      onClick={handleProfile}
                     >
                       <div className="group-link items-center justify-center gap-[0.5rem]">
                         <IconUser color={svgColor} />
