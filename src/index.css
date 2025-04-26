@@ -12,6 +12,8 @@
   --accent: #005752;
 }
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 :root {
   --mantine-primary-0: #212529;
   --mantine-primary-1: #343a40;

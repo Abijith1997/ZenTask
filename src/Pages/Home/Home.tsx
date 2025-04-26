@@ -147,7 +147,7 @@ export const Home = ({ user }: { user: User }) => {
         </svg>
 
         <LeftBar setCurrentPage={setCurrentPage} />
-        <Navbar user={user} />
+        <Navbar user={user} setCurrentPage={setCurrentPage} />
         {loading ? (
           <div>Loading...</div>
         ) : currentPage === "Main" ? (

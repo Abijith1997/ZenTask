@@ -50,7 +50,7 @@ export const NotePage = ({ user }: NotePageProps) => {
   }, [localNotes]);
 
   return (
-    <div className="note-page flex flex-col items-center p-8 min-h-screen justify-start box-border mt-16  top-0 right-0 ml-24 w-[calc(100%_-_6rem)] overflow-y-auto">
+    <div className="note-page flex flex-col items-start justify-start box-border mt-16 min-h-[100dvh] top-0 sm:right-0 sm:ml-24 sm:w-[calc(100%_-_6rem)] overflow-y-auto p-10 w-full">
       <InstantNote />
       <PinnedNotes pinnedNotes={pinnedNotes} />
       <NoteList localNotes={localNotes} />

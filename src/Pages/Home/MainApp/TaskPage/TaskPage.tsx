@@ -7,9 +7,9 @@ interface TaskpageProps {
 
 export const TaskPage = ({ user }: TaskpageProps) => {
   return (
-    <div className="task-page flex flex-col items-center p-8 min-h-screen justify-start box-border mt-16  top-0 right-0 ml-24 w-[calc(100%_-_6rem)] overflow-y-auto">
+    <div className="task-page flex flex-col items-start justify-start box-border mt-16 min-h-[100dvh] top-0 sm:right-0 sm:ml-24 sm:w-[calc(100%_-_6rem)] overflow-y-auto p-10 w-full">
       <header className="task-header m-0">
-        <p className="text-2xl">
+        <p className=" text-xl sm:text-2xl">
           Welcome back,{" "}
           {user?.identities?.[0]?.identity_data?.full_name || "User"}
         </p>

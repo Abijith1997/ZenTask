@@ -6,6 +6,12 @@ import { IconCaretDown } from "@tabler/icons-react";
 import { RootState } from "@/Store";
 import { Task } from "@/Interface/Types";
 import { supabase } from "@/supabaseClient";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@radix-ui/react-accordion";
 
 interface TaskListProps {
   user: User;
@@ -55,44 +61,48 @@ export const TaskList = ({ user }: TaskListProps) => {
   };
 
   return (
-    <div className="task-whole-list flex flex-col items-start">
-      <div className="incompleted flex flex-col gap-0 w-full">
-        <h2 className="heading-task-status text-center underline uppercase mb-2 !text-md p-2">
-          Incomplete
-        </h2>
-        <div className="whole-task-list">
-          {incompletedTasks.length > 0 ? (
-            incompletedTasks.map((task) => (
-              <DisplayTasks
-                key={task.id}
-                task={task}
-                checked={checkedMap[task.id] || false}
-                setChecked={(value: boolean) =>
-                  handleSetChecked(task.id, value)
-                }
-              />
-            ))
-          ) : (
-            <li>No tasks found</li>
-          )}
-        </div>
+    <div className="task-whole-list justify-start  flex flex-col gap-0 w-full items-center">
+      <h2 className="heading-task-status text-center underline uppercase mb-2 !text-md p-2">
+        Incomplete
+      </h2>
+      <div className="whole-task-list w-full lg:w-[60%] flex flex-col gap-2 items-center justify-center">
+        {incompletedTasks.length > 0 ? (
+          incompletedTasks.map((task) => (
+            <DisplayTasks
+              key={task.id}
+              task={task}
+              checked={checkedMap[task.id] || false}
+              setChecked={(value: boolean) => handleSetChecked(task.id, value)}
+            />
+          ))
+        ) : (
+          <li>No tasks found</li>
+        )}
       </div>
-      <div className="collapse-tasks w-auto">
-        <div className="collapse-group flex justify-center mb-1">
-          <h2 className="heading-task-status !text-md underline uppercase text-center">
-            Completed
-          </h2>
-          <IconCaretDown
-            size={20}
-            // className={
-            //   opened ? `caret-down-icon-open` : `caret-down-icon-close`
-            // }
-          />
-        </div>
-
-        <div className="collapse-tasks">
-          <div className="whole-task-list">
-            <div className="completed flex flex-col">
+      <Accordion type="single" collapsible asChild>
+        <AccordionItem
+          value="item-1"
+          className="task-whole-list justify-start flex flex-col gap-0 w-full items-center"
+        >
+          <AccordionTrigger
+            onClick={() => {
+              document
+                .querySelector(".caret-down-icon")
+                ?.classList.toggle("open");
+              document
+                .querySelector(".complete-tasks")
+                ?.classList.toggle("open");
+            }}
+          >
+            <div className="collapse-group flex justify-center mb-1 w-full">
+              <h2 className="heading-task-status !text-md underline uppercase text-center">
+                Completed
+              </h2>
+              <IconCaretDown size={20} className="caret-down-icon" />
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="complete-tasks w-full flex flex-col gap-2 items-center justify-center overflow-hidden transition-all duration-500 ease-in-out">
+            <div className="whole-task-list w-full lg:w-[60%] flex flex-col gap-2 items-center justify-center">
               {completedTasks.length > 0 ? (
                 completedTasks.map((task) => (
                   <DisplayTasks
@@ -108,9 +118,9 @@ export const TaskList = ({ user }: TaskListProps) => {
                 <li>No tasks found</li>
               )}
             </div>
-          </div>
-        </div>
-      </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };

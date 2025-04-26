@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+
 import {
   Tooltip,
   TooltipContent,
@@ -6,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
 import { IconHome, IconListCheck, IconNotes } from "@tabler/icons-react";
+import { handleNavigation } from "../Functions/Functions";
 
 interface LeftBarProps {
   setCurrentPage: (value: string) => void;
@@ -13,22 +15,23 @@ interface LeftBarProps {
 
 export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
   const svgColor = "#424242";
-  const handleNavigation = (page: string) => {
-    setCurrentPage(page);
+
+  const callHandleNavigation = (page: string) => {
+    handleNavigation({ page, setCurrentPage });
   };
 
   return (
     <>
-      <div className="leftbar z-[100] fixed top-0 left-0 w-[6rem] min-h-screen py-4 bg-background">
-        <div className="top-gap" style={{ height: "3rem" }}></div>
-        <div className="navlinks flex items-center justify-center flex-col gap-[1rem] p-[1rem] border-t-[2px] border-t-[#f3f3f6]">
+      <div className="sm:block hidden leftbar sm:z-[100] fixed top-0 left-0 w-[4rem]  sm:w-[6rem] sm:min-h-screen py-4 bg-background">
+        <div className="top-gap flex items-start justify-center h-[3rem]  pt-1.5"></div>
+        <div className="hidden navlinks sm:flex items-center justify-center flex-col gap-[1rem] p-[1rem] border-t-[2px] border-t-[#f3f3f6]">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <a className="w-[100%]">
                   <Button
                     className="nav-button w-full flex items-center justify-center"
-                    onClick={() => handleNavigation("Main")}
+                    onClick={() => callHandleNavigation("Main")}
                   >
                     <div className="group-link items-center justify-center gap-[0.5rem]">
                       <IconHome color={svgColor} />
@@ -49,7 +52,7 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
                 <a className="w-[100%]">
                   <Button
                     className="nav-button w-full justify-center flex items-center"
-                    onClick={() => handleNavigation("Task")}
+                    onClick={() => callHandleNavigation("Task")}
                   >
                     <div className="group-link items-center justify-center gap-[0.5rem]">
                       <IconListCheck color={svgColor} />
@@ -70,7 +73,7 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
                 <a className="w-[100%]">
                   <Button
                     className="nav-button w-full flex items-center justify-center"
-                    onClick={() => handleNavigation("Note")}
+                    onClick={() => callHandleNavigation("Note")}
                   >
                     <div className="group-link items-center justify-center gap-[0.5rem]">
                       <IconNotes color={svgColor} />

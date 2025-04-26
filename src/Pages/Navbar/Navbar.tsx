@@ -8,13 +8,37 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Separator,
 } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
-import { IconLogout } from "@tabler/icons-react";
+import {
+  IconHome,
+  IconListCheck,
+  IconLogout,
+  IconMenu2,
+  IconNotes,
+  IconUser,
+} from "@tabler/icons-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { handleNavigation } from "../Functions/Functions";
+import { useState } from "react";
 
-export const Navbar = ({ user }: { user: User }) => {
+interface NavbarProps {
+  user: User;
+  setCurrentPage: (value: string) => void;
+}
+
+export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const svgColor = "#e9ecef";
+  const [open, setOpen] = useState(false);
   // const [profileOpen, setProfileOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleLogOut = async () => {
@@ -26,13 +50,16 @@ export const Navbar = ({ user }: { user: User }) => {
       navigate("/login");
     }
   };
-  const handleNavigation = () => {
-    // setProfileOpen(true);
+  const callHandleNavigation = (page: string) => {
+    handleNavigation({ page, setCurrentPage });
+    setOpen(false);
   };
+
+  const handleProfile = () => {};
 
   return (
     <>
-      <div className="top-navbar flex flex-row justify-between items-center h-[4rem] fixed bg-background text-amber-50 top-0 right-0 w-[calc(100%_-_6rem)] z-[100]">
+      <div className="top-navbar flex flex-row justify-between items-center h-[4rem] fixed dark:bg-white bg-background text-amber-50 top-0 sm:right-0 sm:w-[calc(100%_-_6rem)] z-[100] w-[100dvw]">
         <div className="flex items-center justify-center text-sm pl-[1rem]">
           <div
             className="w-7 h-7 [&>*]:w-full [&>*]:h-full flex
@@ -44,7 +71,7 @@ export const Navbar = ({ user }: { user: User }) => {
 
           <h1 className="ml-[1rem]">ZenTask</h1>
         </div>
-        <div className="flex justify-center items-center pr-[0.5rem]">
+        <div className="sm:flex justify-center items-center pr-[0.5rem] hidden">
           <div className="theme-container mr-[0.5rem] rounded-full">
             <ThemeToggle />
           </div>
@@ -63,7 +90,7 @@ export const Navbar = ({ user }: { user: User }) => {
               <DropdownMenuContent className="flex flex-col items-center justify-center gap-2 mr-[1rem] mt-[0.5rem] bg-secondary p-[1rem] rounded-sm w-[100%] right-10 translate-x-[-1rem]">
                 <Button
                   className="flex justify-center items-center w-full settings-button"
-                  onClick={handleNavigation}
+                  // onClick={handleNavigation()}
                 >
                   Settings
                 </Button>
@@ -81,6 +108,90 @@ export const Navbar = ({ user }: { user: User }) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+        </div>
+        <div className="sm:hidden pr-2 mr-2">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant={"outline"}>
+                <IconMenu2 size={24} color={svgColor} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="z-400 w-[50%] [&>button]:hidden right-0"
+            >
+              <SheetHeader className="h-[100dvh] flex flex-col justify-between pb-5">
+                <SheetTitle className="text-primary text-xl text-center">
+                  Quick Access
+                </SheetTitle>
+                <Separator className="w-full bg-primary p-0.5 rounded-md" />
+                <SheetDescription className="mt-2 flex justify-between flex-col h-full">
+                  <div className="navlinks flex items-center justify-center flex-col gap-[1rem] ">
+                    <a className="w-full">
+                      <Button
+                        variant={"outline"}
+                        className="nav-button w-full flex items-center justify-center"
+                        onClick={() => callHandleNavigation("Main")}
+                      >
+                        <div className="group-link items-center justify-center gap-[0.5rem]">
+                          <IconHome color={svgColor} />
+                        </div>
+                        <p className="decoration-none text-sm">Home</p>
+                      </Button>
+                    </a>
+                    <a className="w-full">
+                      <Button
+                        variant={"outline"}
+                        className="nav-button w-full justify-center flex items-center"
+                        onClick={() => callHandleNavigation("Task")}
+                      >
+                        <div className="group-link items-center justify-center gap-[0.5rem]">
+                          <IconListCheck color={svgColor} />
+                        </div>
+                        <p className="decoration-none text-sm">Tasks</p>
+                      </Button>
+                    </a>
+                    <a className="w-full">
+                      <Button
+                        variant={"outline"}
+                        className="nav-button w-full flex items-center justify-center"
+                        onClick={() => callHandleNavigation("Note")}
+                      >
+                        <div className="group-link items-center justify-center gap-[0.5rem]">
+                          <IconNotes color={svgColor} />
+                        </div>
+                        <p className="decoration-none text-sm">Notes</p>
+                      </Button>
+                    </a>
+                  </div>
+
+                  <div className="profile-link gap-[1rem] flex items-center justify-center flex-col">
+                    <Separator className="h-full w-full bg-primary p-0.5 rounded-md" />
+                    <Button
+                      variant={"outline"}
+                      className="nav-button w-full flex items-center justify-center"
+                      onClick={() => handleProfile()}
+                    >
+                      <div className="group-link items-center justify-center gap-[0.5rem]">
+                        <IconUser color={svgColor} />
+                      </div>
+                      <p className="decoration-none text-sm">Profile</p>
+                    </Button>
+                    <Button
+                      className="flex justify-center items-center w-full settings-button"
+                      variant={"destructive"}
+                      onClick={handleLogOut}
+                    >
+                      <div className="logout-group flex items-center justify-center">
+                        <IconLogout></IconLogout>
+                        <p className="ml-[0.5rem]">Log out</p>
+                      </div>
+                    </Button>
+                  </div>
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </>
