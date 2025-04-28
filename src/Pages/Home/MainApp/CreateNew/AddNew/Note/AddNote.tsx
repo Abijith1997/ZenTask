@@ -13,6 +13,7 @@ import { supabase } from "@/supabaseClient";
 import { insertNoteInDB, updateNoteInDB } from "@/Slices/NoteSlice";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 interface AddNoteProps {
   clicked: boolean; // Function to notify the parent that task was added
@@ -32,6 +33,7 @@ export const AddNote = ({
   setColor,
 }: AddNoteProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [fontColor, setFontColor] = useState("text-primary");
   const [title, setTitle] = useState<string>(note?.Title ?? "");
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
@@ -130,6 +132,7 @@ export const AddNote = ({
       setImage(null);
       setIsPinned(false);
       setClicked(false);
+      setFontColor("text-secondary");
     } catch (err) {
       console.error("Error saving note:", err);
     }
@@ -151,12 +154,14 @@ export const AddNote = ({
     switch (color) {
       case "red":
         setColor("bg-red-300");
+        setFontColor("text-black");
         break;
       case "blue":
-        setColor("bg-blue-300");
+        setColor("bg-blue-500");
+        setFontColor("text-slate-800");
         break;
       case "green":
-        setColor("bg-green-300");
+        setColor("bg-lime-300");
         break;
       case "yellow":
         setColor("bg-yellow-300");
@@ -166,13 +171,21 @@ export const AddNote = ({
     }
   };
 
+  const handleColorBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setChangingColor(false);
+  };
+
   return (
     clicked && (
-      <div className="w-full h-full flex flex-col justify-between p-5 mt-10">
+      <div
+        className={cn(
+          "w-full h-full flex flex-col justify-between p-5 mt-10",
+          fontColor
+        )}
+      >
         <div className="w-full flex justify-center items-center">
-          <h2 className="text-md text-[var(--text-color)] font-bold underline mb-5">
-            New Note
-          </h2>
+          <h2 className="text-md  font-bold underline mb-5">New Note</h2>
         </div>
 
         {typeof image === "string" && (
@@ -197,14 +210,14 @@ export const AddNote = ({
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="test-title border-0 border-b-1 !rounded-none text-[var(--text-color)]"
+            className="test-title border-0 border-b-1 !rounded-none border-primary"
             placeholder="Title"
           />
 
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="test-description resize-none  text-[var(--text-color)] mt-5"
+            className="test-description resize-none mt-5 border border-primary"
             placeholder="Write Note"
           />
         </div>
@@ -244,30 +257,33 @@ export const AddNote = ({
           <div className="color-toolbar text-primary opacity-100 mt-5 w-full mb-2 h-8 bottom-0 left-0 rounded-b-lg flex fill-primary items-center justify-between p-2 gap-2 transition-opacity duration-300 ease-in-out">
             <button
               className="bg-secondary-300 !rounded-full !p-1 ml-1 cursor-pointer hover:scale-105"
-              onClick={() => setChangingColor(false)}
+              onClick={(e) => handleColorBack(e)}
             >
               <IconCircleX />
             </button>
             <button
-              className="bg-green-300 !rounded-full !p-2 "
+              className="bg-green-300 !rounded-full !p-2 border border-secondary hover:scale-105"
               onClick={(e) => changeColor(e, "green")}
             ></button>
             <button
-              className="bg-red-300 !rounded-full !p-2"
+              className="bg-red-300 !rounded-full !p-2 border border-secondary hover:scale-105"
               onClick={(e) => changeColor(e, "red")}
             ></button>
             <button
-              className="bg-blue-300 !rounded-full !p-2"
+              className="bg-blue-300 !rounded-full !p-2 border border-secondary hover:scale-105"
               onClick={(e) => changeColor(e, "blue")}
             ></button>
             <button
-              className="bg-yellow-300 !rounded-full !p-2 mr-1"
+              className="bg-yellow-300 !rounded-full !p-2 mr-1 border border-secondary hover:scale-105"
               onClick={(e) => changeColor(e, "yellow")}
             ></button>
           </div>
         )}
         <div className="button-container justify-end flex w-full">
-          <button className="save-button bg-primary w-20 " onClick={handleSave}>
+          <button
+            className="save-button bg-primary w-20 text-secondary"
+            onClick={handleSave}
+          >
             Save
           </button>
         </div>
