@@ -24,7 +24,7 @@ interface DisplayNote {
 export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
-  const [color, setColor] = useState("bg-secondary");
+  const [color, setColor] = useState<string>(note?.color ?? "bg-secondary");
   const [fontColor, setFontColor] = useState("text-primary");
   const [isEditing, setIsEditing] = useState(false);
   const selectedItem = "newNote";
@@ -112,7 +112,7 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
       case "blue":
         setColor("bg-blue-500");
         setColorChanged(true);
-        setFontColor("text-slate-200");
+        setFontColor("text-slate-800");
         break;
       case "green":
         setColor("bg-lime-300");
