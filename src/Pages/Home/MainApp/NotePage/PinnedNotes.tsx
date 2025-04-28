@@ -8,7 +8,7 @@ interface pinnedNotesProps {
 
 export const PinnedNotes = ({ pinnedNotes }: pinnedNotesProps) => {
   return (
-    <div className="items-start justify-start flex w-full flex-col gap-4 note-whole-list p-4 h-full ">
+    <div className="items-start justify-start flex w-full flex-col gap-4 note-whole-list p-4 h-auto">
       <div className="pinned-heading text-xl flex gap-1 items-center">
         <h2 className="font-bold">Pinned</h2>
         <IconPinFilled size={18} />

@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
-import { IconPalette, IconPhoto, IconPin } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  IconCircleX,
+  IconPalette,
+  IconPhoto,
+  IconPin,
+} from "@tabler/icons-react";
 import { User } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
 import { Note } from "@/Interface/Types";
@@ -14,6 +19,8 @@ interface AddNoteProps {
   setClicked: (clicked: boolean) => void;
   note?: Note;
   content?: string;
+  color: string;
+  setColor: (color: string) => void;
 }
 
 export const AddNote = ({
@@ -21,13 +28,17 @@ export const AddNote = ({
   setClicked,
   note,
   content,
+  color,
+  setColor,
 }: AddNoteProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [title, setTitle] = useState<string>(note?.Title ?? "");
   const dispatch = useDispatch<AppDispatch>();
+  const [changingColor, setChangingColor] = useState(false);
   const [description, setDescription] = useState<string>(content ?? "");
   const [isPinned, setIsPinned] = useState(false);
   const [image, setImage] = useState<File | string | null>(note?.Image || null);
+  const bottomToolbar = useRef<HTMLDivElement | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("image upload clicked");
@@ -108,6 +119,7 @@ export const AddNote = ({
           Pinned: isPinned,
           updatedAt: new Date().toISOString(),
           Image: imageURL,
+          color: color,
         };
         const result = await dispatch(insertNoteInDB(newNote)).unwrap();
         console.log("Note inserted:", result);
@@ -120,6 +132,37 @@ export const AddNote = ({
       setClicked(false);
     } catch (err) {
       console.error("Error saving note:", err);
+    }
+  };
+
+  const handleColor = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (bottomToolbar) {
+      setChangingColor(!changingColor);
+    }
+  };
+
+  const changeColor = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    color: string
+  ) => {
+    e.stopPropagation();
+    setChangingColor(false);
+    switch (color) {
+      case "red":
+        setColor("bg-red-300");
+        break;
+      case "blue":
+        setColor("bg-blue-300");
+        break;
+      case "green":
+        setColor("bg-green-300");
+        break;
+      case "yellow":
+        setColor("bg-yellow-300");
+        break;
+      default:
+        break;
     }
   };
 
@@ -165,31 +208,64 @@ export const AddNote = ({
             placeholder="Write Note"
           />
         </div>
-        <div className="bottom-bar flex justify-between items-center w-full p-5">
-          <label className="color-picker bottom-button cursor-pointer hover:bg-accent p-2 rounded-full">
-            <IconPalette color="var(--primary)" />
-          </label>
-
-          <span
-            onClick={() => setIsPinned((prev) => !prev)}
-            className="pin-button bottom-button cursor-pointer hover:bg-accent p-2 rounded-full"
+        {!changingColor ? (
+          <div
+            className="bottom-bar flex justify-between items-center w-full p-5"
+            ref={bottomToolbar}
           >
-            <IconPin color="var(--primary)" />
-          </span>
+            <div
+              className="color-picker bottom-button cursor-pointer hover:bg-accent p-2 rounded-full"
+              onClick={handleColor}
+            >
+              <IconPalette color="var(--primary)" />
+            </div>
 
-          <label
-            style={{ cursor: "pointer" }}
-            className="image-upload bottom-button cursor-pointer hover:bg-accent p-2 rounded-full transition "
-          >
-            <IconPhoto size={20} color="var(--primary)" />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-          </label>
-        </div>
+            <span
+              onClick={() => setIsPinned((prev) => !prev)}
+              className="pin-button bottom-button cursor-pointer hover:bg-accent p-2 rounded-full"
+            >
+              <IconPin color="var(--primary)" />
+            </span>
+
+            <div
+              style={{ cursor: "pointer" }}
+              className="image-upload bottom-button cursor-pointer hover:bg-accent p-2 rounded-full transition "
+            >
+              <IconPhoto size={20} color="var(--primary)" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="color-toolbar text-primary opacity-100 mt-5 w-full mb-2 h-8 bottom-0 left-0 rounded-b-lg flex fill-primary items-center justify-between p-2 gap-2 transition-opacity duration-300 ease-in-out">
+            <button
+              className="bg-secondary-300 !rounded-full !p-1 ml-1 cursor-pointer hover:scale-105"
+              onClick={() => setChangingColor(false)}
+            >
+              <IconCircleX />
+            </button>
+            <button
+              className="bg-green-300 !rounded-full !p-2 "
+              onClick={(e) => changeColor(e, "green")}
+            ></button>
+            <button
+              className="bg-red-300 !rounded-full !p-2"
+              onClick={(e) => changeColor(e, "red")}
+            ></button>
+            <button
+              className="bg-blue-300 !rounded-full !p-2"
+              onClick={(e) => changeColor(e, "blue")}
+            ></button>
+            <button
+              className="bg-yellow-300 !rounded-full !p-2 mr-1"
+              onClick={(e) => changeColor(e, "yellow")}
+            ></button>
+          </div>
+        )}
         <div className="button-container justify-end flex w-full">
           <button className="save-button bg-primary w-20 " onClick={handleSave}>
             Save

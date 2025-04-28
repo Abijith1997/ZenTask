@@ -18,6 +18,7 @@ export interface Note {
   Pinned: boolean;
   updatedAt: string;
   Image: string | null;
+  color: string | null;
 }
 
 export interface DisplayTasksProps {
