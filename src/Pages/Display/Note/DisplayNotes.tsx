@@ -138,7 +138,7 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
     <>
       <div
         className={cn(
-          "display-note mb-2 p-2  max-w-[400px] relative pb-6 !important break-inside-avoid flex flex-col hover:scale-101 hover:shadow-lg justify-start items-start w-[300px] h-auto rounded-lg shadow-md duration-300 ease-in-out transition-shadow will-change-transform cursor-pointer",
+          "display-note mb-2 p-2  max-w-[180px] sm:max-w-[400px] relative pb-6 break-inside-avoid flex flex-col hover:scale-101 hover:shadow-lg sm:justify-start sm:items-start w-[300px] h-auto rounded-lg shadow-md duration-300 ease-in-out transition-shadow will-change-transform cursor-pointer",
           color,
           fontColor
         )}

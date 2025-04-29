@@ -23,7 +23,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -126,13 +125,13 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
               side="right"
               className="z-400 w-[50%] [&>button]:hidden right-0"
             >
-              <SheetHeader className="h-[100dvh] flex flex-col justify-between pb-5">
-                <SheetTitle className="text-primary text-xl text-center">
-                  Quick Access
-                </SheetTitle>
-                <Separator className="w-full bg-primary p-0.5 rounded-md" />
-                <SheetDescription className="mt-2 flex justify-between flex-col h-full">
-                  <div className="navlinks flex items-center justify-center flex-col gap-[1rem] ">
+              <SheetHeader className="h-[100dvh] flex flex-col justify-between pb-5 text-white">
+                <div className="top gap-1 flex flex-col items-center justify-center w-full text-white">
+                  <SheetTitle className="text-primary text-xl text-center">
+                    Quick Access
+                  </SheetTitle>
+                  <Separator className="w-full bg-primary p-0.5 rounded-md mb-2" />
+                  <div className="navlinks flex items-center justify-center flex-col gap-[1rem] w-full ">
                     <a className="w-full">
                       <Button
                         variant={"outline"}
@@ -170,31 +169,31 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
                       </Button>
                     </a>
                   </div>
+                </div>
 
-                  <div className="profile-link gap-[1rem] flex items-center justify-center flex-col">
-                    <Separator className="h-full w-full bg-primary p-0.5 rounded-md" />
-                    <Button
-                      variant={"outline"}
-                      className="nav-button w-full flex items-center justify-center"
-                      onClick={handleProfile}
-                    >
-                      <div className="group-link items-center justify-center gap-[0.5rem]">
-                        <IconUser color={svgColor} />
-                      </div>
-                      <p className="decoration-none text-sm">Profile</p>
-                    </Button>
-                    <Button
-                      className="flex justify-center items-center w-full settings-button"
-                      variant={"destructive"}
-                      onClick={handleLogOut}
-                    >
-                      <div className="logout-group flex items-center justify-center">
-                        <IconLogout></IconLogout>
-                        <p className="ml-[0.5rem]">Log out</p>
-                      </div>
-                    </Button>
-                  </div>
-                </SheetDescription>
+                <div className="profile-link gap-[1rem] flex items-center justify-center flex-col">
+                  <Separator className="h-full w-full bg-primary p-0.5 rounded-md" />
+                  <Button
+                    variant={"outline"}
+                    className="nav-button w-full flex items-center justify-center"
+                    onClick={handleProfile}
+                  >
+                    <div className="group-link items-center justify-center gap-[0.5rem]">
+                      <IconUser color={svgColor} />
+                    </div>
+                    <p className="decoration-none text-sm">Profile</p>
+                  </Button>
+                  <Button
+                    className="flex justify-center items-center w-full settings-button"
+                    variant={"destructive"}
+                    onClick={handleLogOut}
+                  >
+                    <div className="logout-group flex items-center justify-center">
+                      <IconLogout></IconLogout>
+                      <p className="ml-[0.5rem]">Log out</p>
+                    </div>
+                  </Button>
+                </div>
               </SheetHeader>
             </SheetContent>
           </Sheet>

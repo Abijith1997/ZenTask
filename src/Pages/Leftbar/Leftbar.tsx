@@ -22,7 +22,7 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
 
   return (
     <>
-      <div className="sm:block hidden leftbar sm:z-[100] fixed top-0 left-0 w-[4rem]  sm:w-[6rem] sm:min-h-screen py-4 bg-background">
+      <div className="sm:block hidden leftbar sm:z-[100] fixed top-0 left-0 w-[4rem]  sm:w-[6rem] sm:min-h-full py-4 bg-background">
         <div className="top-gap flex items-start justify-center h-[3rem]  pt-1.5"></div>
         <div className="hidden navlinks sm:flex items-center justify-center flex-col gap-[1rem] p-[1rem] border-t-[2px] border-t-[#f3f3f6]">
           <TooltipProvider>

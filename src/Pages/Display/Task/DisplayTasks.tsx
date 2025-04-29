@@ -164,11 +164,11 @@ export const DisplayTasks = ({
 
   return (
     <div
-      className="outer-display-task w-full flex items-center justify-center p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] gap-5"
+      className=" outer-display-task w-full flex items-center justify-center sm:p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
       ref={outerRef}
     >
       <div
-        className="relative gemini-svg w-auto h-auto rounded-3xl p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110"
+        className="relative gemini-svg w-auto h-auto rounded-3xl p-[4px] sm:p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out sm:hover:scale-110 shadow-lg "
         onClick={(e) =>
           invokeGemini({
             e,
@@ -180,22 +180,22 @@ export const DisplayTasks = ({
           })
         }
       >
-        <div className="gemini-svg-inner w-[22px] z-10 bg-secondary rounded-3xl p-1">
+        <div className="gemini-svg-inner w-[25px] sm:w-[22px] z-10 bg-secondary sm:rounded-3xl rounded-full p-1">
           <GeminiSVG />
         </div>
       </div>
 
       <div
-        className="display-task p-5 break-inside-avoid flex flex-col justify-start items-start rounded-[12px] bg-secondary w-[90%] h-auto transition-all duration-300 ease-in-out cursor-pointer relative z-10 hover:shadow-md hover:scale-[1.01] "
+        className="display-task px-5 break-inside-avoid flex flex-col justify-start items-start rounded-[12px]  w-[90%]  transition-all duration-300 ease-in-out cursor-pointer relative z-10 hover:shadow-md hover:scale-[1.01] max-w-full bg-secondary"
         ref={innerRef}
       >
         <div
           ref={editorRef}
           className={cn(
-            "individual-task flex items-center justify-center w-full",
+            "individual-task flex items-center justify-center w-full py-5",
             {
-              "h-[4dvw]": !isEditing,
-              "h-[200px]": isEditing,
+              "h-auto": !isEditing,
+              "sm:h-[200px] max-w-[100%]": isEditing,
               "gap-5": true,
               "transition-all ease-in-out duration-300": true,
             }
@@ -205,7 +205,7 @@ export const DisplayTasks = ({
           <div
             ref={editorRef}
             className={cn(
-              "title-description-container flex flex-col w-full gap-2",
+              "title-description-container flex flex-col  w-full gap-2",
               {
                 "transition-opacity duration-[10000ms] ease-in-out": true,
                 "transition-all ease-in-out duration-300": isEditing,
@@ -219,7 +219,7 @@ export const DisplayTasks = ({
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="task-title-input resize-none border-0 shadow-sm rounded-lg flex text-sm p-4"
+                  className="task-title-input resize-none border-0 shadow-sm rounded-lg flex text-sm sm:p-4 p-2"
                   autoFocus
                 />
 
@@ -253,7 +253,7 @@ export const DisplayTasks = ({
                 )}
               </>
             ) : (
-              <div className="title-description w-full !text-[var(--text-color)]">
+              <div className="title-description w-full !text-[var(--text-color)] text-sm sm:text-md">
                 <h2
                   className={cn(
                     "task-title break-words uppercase ",
@@ -275,7 +275,7 @@ export const DisplayTasks = ({
                     const color = getDueColor({ minutesUntilDue, checked });
 
                     return (
-                      <p className={cn("text-xs", color)}>
+                      <p className={cn("text-[0.75rem]", color)}>
                         ⏰ Due{" "}
                         {formatDistanceToNow(dueDate, { addSuffix: true })}
                         {", "}
@@ -286,16 +286,16 @@ export const DisplayTasks = ({
               </div>
             )}
           </div>
-          <div className="manipulation-group flex items-center justify-center flex-col gap-5">
+          <div className="manipulation-group  flex items-center justify-center flex-col gap-5">
             <div>
-              <div className="delete-task relative flex items-center justify-center gap-0">
+              <div className="delete-task relative flex items-center justify-center ">
                 <button
                   className="edit-button duration-300 ease-in-out transition-all scale-100"
                   onClick={() => setIsEditing(!isEditing)}
                 >
                   {isEditing ? (
                     <IconX
-                      className="close-icon duration-300 ease-in-out transition-all scale-100"
+                      className="close-icon duration-300 ease-in-out transition-all scale-100 "
                       size={15}
                     />
                   ) : (
@@ -303,7 +303,7 @@ export const DisplayTasks = ({
                   )}
                 </button>
 
-                <button className="delete-button" onClick={handleDelete}>
+                <button className="delete-button " onClick={handleDelete}>
                   <IconTrashFilled className="delete-icon" size={15} />
                 </button>
 

@@ -61,7 +61,7 @@ export const TaskList = ({ user }: TaskListProps) => {
   };
 
   return (
-    <div className="task-whole-list justify-start  flex flex-col gap-0 w-full items-center">
+    <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center">
       <h2 className="heading-task-status text-center underline uppercase mb-2 !text-md p-2">
         Incomplete
       </h2>

@@ -13,7 +13,7 @@ export const PinnedNotes = ({ pinnedNotes }: pinnedNotesProps) => {
         <h2 className="font-bold">Pinned</h2>
         <IconPinFilled size={18} />
       </div>
-      <div className="all-notes w-full [column-width:300px] [column-gap:16px]">
+      <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
         {pinnedNotes.length > 0 ? (
           pinnedNotes.map((note) => (
             <>

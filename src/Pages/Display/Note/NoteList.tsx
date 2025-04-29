@@ -12,7 +12,7 @@ export const NoteList = ({ localNotes }: NoteListProps) => {
         <h3 className=" font-bold align-start justify-start mb-4">Notes</h3>
       </div>
 
-      <div className="all-notes w-full [column-width:300px] [column-gap:16px]">
+      <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
         {localNotes.length > 0 ? (
           localNotes.map((note) => (
             <>

@@ -128,7 +128,10 @@ export const Home = ({ user }: { user: User }) => {
   }, [currentPage]);
 
   return (
-    <div className="App bg-[conic-gradient(at_top_left,_theme('colors.stone.800'),_theme('colors.stone.600'),_theme('colors.stone.900'))] min-h-screen flex items-center justify-center min-w-screen">
+    <div className="App bg-[conic-gradient(at_top_left,_theme('colors.stone.800'),_theme('colors.stone.600'),_theme('colors.stone.900'))] min-h-screen flex items-center justify-center min-w-screen backdrop-blur-2xl z-0">
+      {/* <div className="box w-[30%] h-[50%] bg-yellow-900 rounded absolute top-[20%] left-[20%] z-[-1] blur-3xl"></div> */}
+      {/* <div className="box"></div> */}
+      {/* <div className="box"></div> */}
       <div className="in-app flex justify-flex-start items-flex-start min-w-[100dvw] min-h-[100vh] relative">
         <svg
           xmlns="http://www.w3.org/2000/svg"
