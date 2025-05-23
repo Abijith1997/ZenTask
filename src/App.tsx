@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./Pages/Login_Page/login";
 import { Home } from "./Pages/Home/Home";
 import { store } from "./Store";
+import { Layout } from "./components/Layout"; // create this
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,22 +26,21 @@ function App() {
         console.error("Error fetching user:", error.message);
       }
       setUser(data?.user);
-      console.log(data?.user);
     };
     fetchUser();
   }, []);
 
   return (
-    <>
-      <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={user ? <Home user={user} /> : <Login />} />
-          </Routes>
-        </Router>
-      </Provider>
-    </>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={user ? <Layout /> : <Login />}>
+            {user && <Route index element={<Home user={user} />} />}
+          </Route>
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 

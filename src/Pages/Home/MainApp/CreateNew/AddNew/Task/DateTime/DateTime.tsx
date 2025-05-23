@@ -62,9 +62,13 @@ export const DateTimePicker = ({
     }
   };
 
+  React.useEffect(() => {
+    console.log("Popover open state:", isOpen);
+  }, [isOpen]);
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild className="z-200">
+      <PopoverTrigger asChild>
         <Button
           variant="outline"
           className={cn(
@@ -83,8 +87,14 @@ export const DateTimePicker = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 z-200 bg-accent" ref={dateRef}>
-        <div className="sm:flex">
+      <PopoverContent
+        align="center"
+        alignOffset={2}
+        className="z-[200] fixed translate-x-[30%] translate-y-1/2 bg-[var(--background)] !w-auto"
+        ref={dateRef}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <div className="sm:flex bg-red-50">
           <Calendar
             mode="single"
             selected={date}
@@ -92,7 +102,7 @@ export const DateTimePicker = ({
             initialFocus
           />
           <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto">
+            <ScrollArea className="w-64 sm:w-auto bg-red-50">
               <div className="flex sm:flex-col p-2">
                 {hours.reverse().map((hour) => (
                   <Button

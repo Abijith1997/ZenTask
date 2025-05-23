@@ -53,16 +53,8 @@ export const FloatingContainer = ({
 
     // Delay adding event listener to prevent immediate closing
     const timer = setTimeout(() => {
-      console.log(
-        clicked,
-        "clicked",
-        floatref.current,
-        "floatref.current",
-        dateRef?.current,
-        "dateRef?.current"
-      );
       document.addEventListener("click", handleClickOutside);
-    }, 100);
+    }, 500);
 
     return () => {
       clearTimeout(timer);

@@ -142,9 +142,9 @@ export const AddTask = ({
                 </FormItem>
               )}
             />
-            <div className="mt-3 p-2 flex flex-col gap-2 justify-start items-start w-full h-[150px] ">
+            <div className="mt-3 p-2 flex flex-col gap-2 justify-start items-start">
               <div
-                className="flex gap-2 justify-start items-start w-auto"
+                className="flex gap-2 justify-start items-start w-auto !relative"
                 onClick={() => setSelectingDate(!selectingDate)}
               >
                 <DateTimePicker
