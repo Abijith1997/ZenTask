@@ -128,41 +128,28 @@ export const Home = ({ user }: { user: User }) => {
   }, [currentPage]);
 
   return (
-    <div className="App bg-[conic-gradient(at_top_left,_theme('colors.stone.800'),_theme('colors.stone.600'),_theme('colors.stone.900'))] min-h-screen flex items-center justify-center min-w-screen backdrop-blur-2xl z-0">
-      {/* <div className="box w-[30%] h-[50%] bg-yellow-900 rounded absolute top-[20%] left-[20%] z-[-1] blur-3xl"></div> */}
-      {/* <div className="box"></div> */}
-      {/* <div className="box"></div> */}
-      <div className="in-app flex justify-flex-start items-flex-start min-w-[100dvw] min-h-[100vh] relative">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="animated-bg hidden"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M9 11l3 3l8 -8" />
-          <path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
-        </svg>
+    <div className="App bg-[#f5f6f3] min-h-screen flex items-start justify-start min-w-screen flex-col relative">
+      <div className="in-app w-full">
+        <div className="hidden sm:block fixed z-150">
+          <LeftBar setCurrentPage={setCurrentPage} />
+        </div>
+        <div className="sticky z-100 top-0">
+          <Navbar user={user} setCurrentPage={setCurrentPage} />
+        </div>
 
-        <LeftBar setCurrentPage={setCurrentPage} />
-        <Navbar user={user} setCurrentPage={setCurrentPage} />
-        {loading ? (
-          <div>Loading...</div>
-        ) : currentPage === "Main" ? (
-          <MainApp homeTasks={homeTasks} />
-        ) : currentPage === "Task" ? (
-          <TaskPage user={user} />
-        ) : currentPage === "Note" ? (
-          <NotePage user={user} />
-        ) : currentPage === "Profile" ? (
-          <Profile user={user} />
-        ) : null}
+        <div className="flex z-50 h-full">
+          {loading ? (
+            <div>Loading...</div>
+          ) : currentPage === "Main" ? (
+            <MainApp homeTasks={homeTasks} />
+          ) : currentPage === "Task" ? (
+            <TaskPage user={user} />
+          ) : currentPage === "Note" ? (
+            <NotePage user={user} />
+          ) : currentPage === "Profile" ? (
+            <Profile user={user} />
+          ) : null}
+        </div>
       </div>
     </div>
   );

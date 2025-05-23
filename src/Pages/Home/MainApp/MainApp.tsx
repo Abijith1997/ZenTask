@@ -11,7 +11,9 @@ export const MainApp = ({ homeTasks }: MainAppProps) => {
   return (
     <div
       className="main-app
-    flex flex-col items-start justify-start box-border mt-16 min-h-[100dvh] top-0 sm:right-0 sm:ml-24 sm:w-[calc(100%_-_6rem)] overflow-y-auto sm:p-10 w-full
+    flex flex-col items-stretch justify-start box-border 
+    min-h-screen
+    top-0 sm:ml-[5rem] overflow-y-auto sm:p-10 w-full
     "
     >
       <div className="in-main-app flex flex-col  items-center justify-start min-w-full box-border flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-hide">

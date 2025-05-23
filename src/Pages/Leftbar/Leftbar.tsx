@@ -1,93 +1,186 @@
-import { Button } from "@/components/ui/button";
-
+"use client";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@radix-ui/react-tooltip";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@radix-ui/react-accordion";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { IconHome, IconListCheck, IconNotes } from "@tabler/icons-react";
 import { handleNavigation } from "../Functions/Functions";
+import { useState } from "react";
+import { MenuIcon } from "lucide-react";
 
 interface LeftBarProps {
   setCurrentPage: (value: string) => void;
 }
 
-export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
-  const svgColor = "#424242";
+type CategoryType = {
+  id: string;
+  name: string;
+  count: number;
+};
 
+export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const callHandleNavigation = (page: string) => {
     handleNavigation({ page, setCurrentPage });
   };
 
+  const [categories] = useState<CategoryType[]>([
+    { id: "all", name: "All Tasks", count: 18 },
+    { id: "today", name: "Today", count: 5 },
+    { id: "upcoming", name: "Upcoming", count: 8 },
+    { id: "completed", name: "Completed", count: 12 },
+  ]);
+
+  // const [tags] = useState([
+  //   { id: "work", name: "Work", color: "bg-blue-500" },
+  //   { id: "personal", name: "Personal", color: "bg-purple-500" },
+  //   { id: "urgent", name: "Urgent", color: "bg-red-500" },
+  //   { id: "ideas", name: "Ideas", color: "bg-green-500" },
+  // ]);
+
   return (
     <>
-      <div className="sm:block hidden leftbar sm:z-[100] fixed top-0 left-0 w-[4rem]  sm:w-[6rem] sm:min-h-full py-4 bg-background">
-        <div className="top-gap flex items-start justify-center h-[3rem]  pt-1.5"></div>
-        <div className="hidden navlinks sm:flex items-center justify-center flex-col gap-[1rem] p-[1rem] border-t-[2px] border-t-[#f3f3f6]">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a className="w-[100%]">
-                  <Button
-                    className="nav-button w-full flex items-center justify-center"
-                    onClick={() => callHandleNavigation("Main")}
+      <div
+        className={cn(
+          "h-screen bg-sidebar border-r border-border transition-all duration-300 flex flex-col",
+          isCollapsed ? "w-[90px]" : "w-[300px]"
+        )}
+      >
+        <div
+          className={cn(
+            "flex items-center p-3.5 border-b border-border",
+            isCollapsed ? "justify-center" : "justify-between"
+          )}
+        >
+          {!isCollapsed && <h2 className="font-semibold text-lg">ZenTask</h2>}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={cn(isCollapsed ? "" : "ml-auto")}
+          >
+            <MenuIcon className={cn("h-5 w-5 transition-all")} />
+          </Button>
+        </div>
+
+        <div className="flex-1 overflow-auto p-3">
+          <div className="space-y-6">
+            <div>
+              <Button
+                className={cn(
+                  "nav-button w-full flex items-center justify-center border-1 cursor-pointer hover:bg-blue-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50 border-blue-300",
+                  isCollapsed ? "border-l-1" : "border-l-5"
+                )}
+                onClick={() => callHandleNavigation("Main")}
+                variant={"ghost"}
+              >
+                <div
+                  className={cn(
+                    "group-link flex items-center justify-center transition-all duration-300",
+                    !isCollapsed && "gap-[0.5rem]"
+                  )}
+                >
+                  <IconHome className="text-[#1c1d16] transition-colors" />
+                  <p
+                    className={cn(
+                      "transition-all duration-300 overflow-hidden whitespace-nowrap",
+                      isCollapsed
+                        ? "opacity-0 max-w-0"
+                        : "opacity-100 max-w-[200px]"
+                    )}
                   >
-                    <div className="group-link items-center justify-center gap-[0.5rem]">
-                      <IconHome color={svgColor} />
-                    </div>
-                  </Button>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs p-[0.5rem] bg-secondary text-[var(--text-color)] rounded-sm">
-                  Home
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a className="w-[100%]">
-                  <Button
-                    className="nav-button w-full justify-center flex items-center"
-                    onClick={() => callHandleNavigation("Task")}
+                    Home
+                  </p>
+                </div>
+              </Button>
+            </div>
+            <div>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1" className="w-full ">
+                  <AccordionTrigger className="w-full !p-0">
+                    <Button
+                      className={cn(
+                        "nav-button w-full flex items-center justify-center border-red-300 border-1 cursor-pointer hover:bg-red-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50",
+                        isCollapsed ? "border-l-1" : "border-l-5"
+                      )}
+                      onClick={() => callHandleNavigation("Task")}
+                      variant={"ghost"}
+                    >
+                      <div
+                        className={cn(
+                          "group-link items-center justify-center flex",
+                          !isCollapsed && "gap-[0.5rem]"
+                        )}
+                      >
+                        <IconListCheck className="text-[#1c1d16] transition-colors" />
+                        <p
+                          className={cn(
+                            "transition-all duration-300 overflow-hidden whitespace-nowrap",
+                            isCollapsed
+                              ? "opacity-0 max-w-0"
+                              : "opacity-100 max-w-[200px]" // adjust max-w as needed
+                          )}
+                        >
+                          Tasks
+                        </p>
+                      </div>
+                    </Button>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {!isCollapsed && (
+                      <ul className="mt-[0.5rem] gap-[0.5rem] flex flex-col">
+                        {categories.map((category) => (
+                          <li key={category.id}>
+                            <Button
+                              className={cn(
+                                "w-full flex items-center bg-transparent text-[var(--secondary-text-color)] hover:bg-black/20"
+                              )}
+                              variant={"default"}
+                            >
+                              {category.name}
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <div>
+              <Button
+                className={cn(
+                  "nav-button w-full flex items-center justify-center border-1 cursor-pointer hover:bg-green-700 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50 border-green-700",
+                  isCollapsed ? "border-l-1" : "border-l-5"
+                )}
+                onClick={() => callHandleNavigation("Note")}
+                variant={"ghost"}
+              >
+                <div
+                  className={cn(
+                    "group-link items-center justify-center flex",
+                    !isCollapsed && "gap-[0.5rem]"
+                  )}
+                >
+                  <IconNotes className="text-[#1c1d16] transition-colors" />
+                  <p
+                    className={cn(
+                      "transition-all duration-300 overflow-hidden whitespace-nowrap",
+                      isCollapsed
+                        ? "opacity-0 max-w-0"
+                        : "opacity-100 max-w-[200px]" // adjust max-w as needed
+                    )}
                   >
-                    <div className="group-link items-center justify-center gap-[0.5rem]">
-                      <IconListCheck color={svgColor} />
-                    </div>
-                  </Button>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs p-[0.5rem] bg-secondary text-[var(--text-color)] rounded-sm">
-                  Tasks
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a className="w-[100%]">
-                  <Button
-                    className="nav-button w-full flex items-center justify-center"
-                    onClick={() => callHandleNavigation("Note")}
-                  >
-                    <div className="group-link items-center justify-center gap-[0.5rem]">
-                      <IconNotes color={svgColor} />
-                    </div>
-                  </Button>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs p-[0.5rem] bg-secondary text-[var(--text-color)] rounded-sm">
-                  Notes
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                    Notes
+                  </p>
+                </div>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </>

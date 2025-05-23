@@ -391,3 +391,8 @@
   }
 }
 
+.nav-button:hover svg {
+  transition: all 0s ease-in-out;
+  color: white;
+}
+

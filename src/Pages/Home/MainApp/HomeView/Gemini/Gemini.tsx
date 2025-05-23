@@ -102,19 +102,19 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
 
   return (
     <>
-      <div className="whole-gemini w-full sm:w-[90%]  p-2 sm:p-4 flex flex-col items-center justify-center gap-2 z-0">
+      <div className="whole-gemini w-full sm:w-[100%]  p-2 sm:p-4 flex flex-col items-center justify-center gap-2 z-0">
         <form
           onSubmit={handleGemini}
           className="gemini-form w-[90%] p-4 flex justify-center items-center gap-2"
         >
           <Input
-            className="gemini-input mt-[20] flex-1 max-w-[90%] sm:placeholder:text-xs text-[0.75rem]"
+            className="gemini-input flex-1 max-w-[90%] sm:placeholder:text-xs text-[0.75rem] border-2 border-black/40"
             placeholder="Ask something like 'Help me prioritize...'"
             type="text"
             onChange={(e) => setQuestion(e.target.value)}
           />
           <Button
-            className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem]"
+            className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem] bg-blue-400 hover:bg-blue-500 text-white"
             type="submit"
           >
             Ask Gemini
@@ -122,14 +122,12 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
         </form>
 
         {loading ? (
-          <span className="gemini-loading w-[80%] h-[200px] rounded-[8px]">
+          <span className="gemini-loading w-full h-[200px] rounded-[8px]">
             {loading}
           </span>
         ) : response ? (
-          <div className="gemini-response w-[80%] max-h-[200px] rounded-[8px] mb-10 bg-secondary p-1 overflow-auto text-[var(--text-color)] text-xs relative z-10">
-            <div className="relative z-10 w-full h-full bg-secondary p-10">
-              {" "}
-              {/* Content stays above the ::before */}
+          <div className="gemini-response w-full max-h-[200px] rounded-[8px] mb-10 bg-[#e8e9e2] p-1 overflow-auto text-[var(--text-color)] sm:text-xs relative z-10">
+            <div className="relative z-10 w-full h-full bg-[#e8e9e2] p-10">
               <div
                 className="response-content"
                 dangerouslySetInnerHTML={{ __html: response }}

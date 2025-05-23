@@ -1,5 +1,4 @@
 import { supabase } from "@/supabaseClient";
-import { LogoSVG } from "@/SVG/SVGs";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
@@ -36,7 +35,7 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
-  const svgColor = "#e9ecef";
+  const svgColor = "#1c1d16";
   const [open, setOpen] = useState(false);
   const [openDDM, setOpenDDM] = useState(false);
   // const [profileOpen, setProfileOpen] = useState<boolean>(false);
@@ -64,18 +63,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
 
   return (
     <>
-      <div className="top-navbar flex flex-row justify-between items-center h-[4rem] fixed dark:bg-white bg-background text-amber-50 top-0 sm:right-0 sm:w-[calc(100%_-_6rem)] z-[100] w-[100dvw]">
-        <div className="flex items-center justify-center text-sm pl-[1rem]">
-          <div
-            className="w-7 h-7 [&>*]:w-full [&>*]:h-full flex
-  items-center justify-center
-  ml-[1rem]"
-          >
-            <LogoSVG fillColor={svgColor} />
-          </div>
-
-          <h1 className="ml-[1rem]">ZenTask</h1>
-        </div>
+      <div className="top-navbar bg-sidebar flex flex-row justify-end items-center h-[4rem] text-amber-50 w-full z-50 sticky border-b-2 border-border">
         <div className="sm:flex justify-center items-center pr-[0.5rem] hidden">
           <div className="theme-container mr-[0.5rem] rounded-full">
             <ThemeToggle />
