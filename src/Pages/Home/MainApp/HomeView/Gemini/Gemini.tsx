@@ -4,6 +4,7 @@ import { Task } from "@/Interface/Types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconSend } from "@tabler/icons-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GeminiProps {
   homeTasks: Task[];
@@ -99,6 +100,8 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
     generateGeminiResponse();
   };
 
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     generateGeminiResponse();
   }, [homeTasks]);
@@ -120,10 +123,13 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
             className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem] bg-blue-400 hover:bg-blue-500 text-white flex"
             type="submit"
           >
-            <span className="sm:flex hidden">Ask Gemini</span>
-            <span className="sm:hidden transform rotate-[45deg]">
-              <IconSend />
-            </span>
+            {!isMobile ? (
+              <span>Ask Gemini</span>
+            ) : (
+              <span className="rotate-[45deg]">
+                <IconSend />
+              </span>
+            )}
           </Button>
         </form>
 
