@@ -117,7 +117,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
             onChange={(e) => setQuestion(e.target.value)}
           />
           <Button
-            className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem] bg-blue-400 hover:bg-blue-500 text-white"
+            className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem] bg-blue-400 hover:bg-blue-500 text-white flex"
             type="submit"
           >
             <span className="sm:flex hidden">Ask Gemini</span>

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { IconHome, IconListCheck, IconNotes } from "@tabler/icons-react";
 import { handleNavigation } from "../Functions/Functions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
 
 interface LeftBarProps {
@@ -34,6 +34,10 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
     { id: "upcoming", name: "Upcoming", count: 8 },
     { id: "completed", name: "Completed", count: 12 },
   ]);
+
+  useEffect(() => {
+    setIsCollapsed(true);
+  }, []);
 
   // const [tags] = useState([
   //   { id: "work", name: "Work", color: "bg-blue-500" },
