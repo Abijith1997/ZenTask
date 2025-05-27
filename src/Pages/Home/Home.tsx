@@ -133,7 +133,7 @@ export const Home = ({ user }: { user: User }) => {
         <div className="hidden sm:block fixed z-150">
           <LeftBar setCurrentPage={setCurrentPage} />
         </div>
-        <div className="sticky z-100 top-0">
+        <div className="sticky z-100 top-0 p-[0.1rem]">
           <Navbar user={user} setCurrentPage={setCurrentPage} />
         </div>
 

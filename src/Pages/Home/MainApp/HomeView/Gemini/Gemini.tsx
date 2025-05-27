@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { Task } from "@/Interface/Types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { IconSend } from "@tabler/icons-react";
 
 interface GeminiProps {
   homeTasks: Task[];
@@ -48,10 +49,12 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
     const generalPrompt = `The current time is ${timeNow.toString()} (with timezone offset ${timeOffset} minutes from UTC). 
     Provide the response as a html body element. 
     Omit the head, html, and body tags. 
+    Don't provide background colors, shadows and anything related to style. 
     Only provide answers inside div elements using classes and relevant inner tags. 
     This is for use in a dynamic webpage. 
     Also if sending back time, say the time as a normal person. Use my timezone and omit the usage of UTC, CET etc.
-    The content should be as you talk to a human.`;
+    The content should be as you talk to a human.
+    Also add text-xs classname to every element.`;
     console.log(taskPrompt);
     console.log(generalPrompt);
     try {
@@ -117,17 +120,20 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
             className="gemini-ask-button mt-[20] h-[35px] sm:text-xs text-[0.75rem] bg-blue-400 hover:bg-blue-500 text-white"
             type="submit"
           >
-            Ask Gemini
+            <span className="sm:flex hidden">Ask Gemini</span>
+            <span className="sm:hidden transform rotate-[45deg]">
+              <IconSend />
+            </span>
           </Button>
         </form>
 
         {loading ? (
-          <span className="gemini-loading w-full h-[200px] rounded-[8px]">
+          <span className="gemini-loading w-[80%] sm:w-full h-[200px] rounded-[8px]">
             {loading}
           </span>
         ) : response ? (
-          <div className="gemini-response w-full max-h-[200px] rounded-[8px] mb-10 bg-[#e8e9e2] p-1 overflow-auto text-[var(--text-color)] sm:text-xs relative z-10">
-            <div className="relative z-10 w-full h-full bg-[#e8e9e2] p-10">
+          <div className="gemini-response w-[80%] sm:w-full h-fit-content sm:max-h-[200px] rounded-[8px] sm:mb-10 bg-[#e8e9e2] p-1 overflow-auto text-[var(--text-color)] sm:text-xs relative z-10">
+            <div className="relative z-10 w-full h-full bg-[#e8e9e2] p-2 sm:p-10 ">
               <div
                 className="response-content"
                 dangerouslySetInnerHTML={{ __html: response }}

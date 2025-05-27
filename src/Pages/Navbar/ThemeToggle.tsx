@@ -16,7 +16,7 @@ export const ThemeToggle = () => {
   return (
     <Button
       variant="outline"
-      className="theme-button h-[2.2rem] w-[2.2rem] p-0 m-0 !rounded-full"
+      className="theme-button h-[2.2rem] w-[2.2rem] p-0 m-0 !rounded-full bg-primary"
       onClick={toggleDarkMode} // 👉 add onClick here
     >
       <IconBrightness2

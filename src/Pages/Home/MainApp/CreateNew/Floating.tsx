@@ -96,14 +96,13 @@ export const FloatingContainer = ({
         <div className="complete-floating w-screen h-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-100">
           <div
             className={cn(
-              "test-page p-4 rounded-md  w-[500px] max-h-[600px] h-auto flex flex-col items-center justify-center shadow-[2px_2px_5px_rgba(0,0,0,0.3)] gap-0 relative",
-              color
+              "h-screen test-page p-4 rounded-md  w-[500px] sm:max-h-[600px] sm:h-auto flex flex-col items-center justify-center shadow-[2px_2px_5px_rgba(0,0,0,0.3)] gap-0 relative bg-background"
             )}
             ref={floatref}
           >
             <button
               onClick={() => setClicked(false)}
-              className="close-button absolute top-5 right-5 close-button border-none bg-[var(--mantine-primary-5)] cursor-pointer !rounded-full transition-colors duration-300 hover:bg-accent h-10 w-10 flex items-center justify-center !p-1"
+              className="close-button absolute top-5 right-5 close-button border-none cursor-pointer !rounded-full transition-colors duration-300 hover:bg-accent h-10 w-10 flex items-center justify-center !p-1"
             >
               <IconX size={20} />
             </button>

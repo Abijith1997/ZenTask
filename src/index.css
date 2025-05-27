@@ -29,7 +29,8 @@
   -moz-osx-font-smoothing: grayscale;
   --text-50: #f3f4f0;
   --radius: 0.625rem;
-  --background: oklch(14.7% 0.004 49.25);
+  --background: #f5f6f3;
+  /* --background: oklch(14.7% 0.004 49.25); */
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
@@ -42,7 +43,7 @@
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
   --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(44.2% 0.017 285.786);
+  --accent: #5d7e68;
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.929 0.013 255.508);
@@ -164,4 +165,14 @@ button {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5530 100%);
 }

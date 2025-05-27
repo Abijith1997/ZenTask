@@ -111,10 +111,10 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="z-400 w-[50%] [&>button]:hidden right-0"
+              className="z-400 w-[50%] [&>button]:hidden right-0 border-0"
             >
-              <SheetHeader className="h-[100dvh] flex flex-col justify-between pb-5 text-white">
-                <div className="top gap-1 flex flex-col items-center justify-center w-full text-white">
+              <SheetHeader className="h-[100dvh] flex flex-col justify-between pb-5 ">
+                <div className="top gap-1 flex flex-col items-center justify-center w-full ">
                   <SheetTitle className="text-primary text-xl text-center">
                     Quick Access
                   </SheetTitle>

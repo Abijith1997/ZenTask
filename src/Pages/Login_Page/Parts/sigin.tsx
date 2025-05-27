@@ -18,7 +18,7 @@ export const SignIn = ({ isSignUpActive, setIsSignUpActive }: Props) => {
   const navigate = useNavigate();
 
   const button =
-    "border-1 text-xs border-background bg-background hover:border-1 transition-all hover:border-background hover:bg-secondary hover:text-primary hover:transition-all";
+    "border-1 text-xs border-black bg-primary hover:border-1 transition-all hover:border-background hover:bg-secondary hover:text-primary hover:transition-all";
 
   const onSignIn = async () => {
     const { data, error } = await handleSignIn(email, password);

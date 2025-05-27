@@ -58,14 +58,6 @@ export const AddTask = ({
     },
   });
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm({
-  //   resolver: yupResolver(schema),
-  // });
-
   useEffect(() => {
     const getUser = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -119,12 +111,12 @@ export const AddTask = ({
   return (
     clicked && (
       <div className="task-inputflex flex-col items-center justify-center gap-10 w-full h-full ">
-        <h1 className="unset add-task-title capitalize w-full text-center p-5 font-semibold mb-5 text-[var(--text-color)] !text-2xl border-b-1">
+        <h1 className="unset add-task-title capitalize w-full text-center pt-10 sm:pt-5 py-5 font-semibold mb-5 text-[var(--text-color)] !text-2xl border-b-1">
           Add new task
         </h1>
         <FormProvider {...form}>
           <form
-            className="submit-form p-5 max-h-[400px] w-full"
+            className="submit-form p-5 h-full sm:max-h-[400px] w-full"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
@@ -142,7 +134,7 @@ export const AddTask = ({
                 </FormItem>
               )}
             />
-            <div className="mt-3 p-2 flex flex-col gap-2 justify-start items-start">
+            <div className="mt-3 py-5 sm:p-2 flex flex-col sm:gap-2 justify-start items-start relative gap-5">
               <div
                 className="flex gap-2 justify-start items-start w-auto !relative"
                 onClick={() => setSelectingDate(!selectingDate)}
@@ -186,7 +178,7 @@ export const AddTask = ({
                 </CollapsibleContent>
               </Collapsible>
             </div>
-            <div className="submit-container flex items-center justify-end gap-2 mt-2">
+            <div className="submit-container items-center justify-end gap-2 mt-2 flex">
               <Button className="task-add-button rounded-md" type="submit">
                 <IconSquareRoundedPlusFilled
                   className="add-icon"

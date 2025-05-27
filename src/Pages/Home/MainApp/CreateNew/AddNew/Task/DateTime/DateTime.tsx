@@ -77,24 +77,23 @@ export const DateTimePicker = ({
             !date && "text-primary"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" color="white" />
+          <CalendarIcon className="mr-2 h-4 w-4" color="black" />
           {date ? (
             format(date, "MM/dd/yyyy hh:mm aa")
           ) : (
-            <span className="text-[var(--text-color)]">
-              MM/DD/YYYY hh:mm aa
-            </span>
+            <span className="text-[var(--text-color)]">Due</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
         align="center"
+        side="top"
         alignOffset={2}
-        className="z-[200] fixed translate-x-[30%] translate-y-1/2 bg-[var(--background)] !w-auto"
+        className="z-[9999] bg-[var(--background)] w-auto translate-y-[250%] translate-x-[20dvw]"
         ref={dateRef}
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
-        <div className="sm:flex bg-red-50">
+        <div className="sm:flex bg-secondary ">
           <Calendar
             mode="single"
             selected={date}
@@ -102,7 +101,7 @@ export const DateTimePicker = ({
             initialFocus
           />
           <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto bg-red-50">
+            <ScrollArea className="w-64 sm:w-auto ">
               <div className="flex sm:flex-col p-2">
                 {hours.reverse().map((hour) => (
                   <Button
