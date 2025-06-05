@@ -7,6 +7,8 @@ export interface Task {
   created_at: string;
   Due: string | null;
   Gemini_ID: string | null;
+  Tags: {};
+  Priority: string;
 }
 
 export interface Note {
@@ -22,9 +24,13 @@ export interface Note {
 }
 
 export interface DisplayTasksProps {
+  setSelectedItem: (value: string | null) => void;
   task: Task;
   checked: boolean;
   setChecked: (value: boolean) => void;
+  clicked: boolean;
+  setClicked: (value: boolean) => void;
+  setSelectedTask: (value: Task | undefined) => void;
 }
 
 export interface dueColorProps {

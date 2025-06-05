@@ -16,7 +16,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface DateTimeProps {
   setSelectedTime: (value: string) => void;
-  selectedTime?: string;
+  selectedTime?: string | null;
   dateRef?: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -89,7 +89,7 @@ export const DateTimePicker = ({
         align="center"
         side="top"
         alignOffset={2}
-        className="z-[9999] bg-[var(--background)] w-auto translate-y-[250%] translate-x-[20dvw]"
+        className="z-[9999] bg-[var(--background)] w-auto "
         ref={dateRef}
         onOpenAutoFocus={(e) => e.preventDefault()}
       >

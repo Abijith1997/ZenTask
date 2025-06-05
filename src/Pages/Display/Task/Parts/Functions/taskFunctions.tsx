@@ -38,6 +38,8 @@ interface handleSaveProps {
   editTitle: string;
   editDescription: string;
   setIsEditing: (value: boolean) => void;
+  tags?: string[];
+  Priority: string;
 }
 
 export const handleSave = async ({
@@ -47,6 +49,8 @@ export const handleSave = async ({
   editTitle,
   editDescription,
   setIsEditing,
+  Priority,
+  tags,
 }: handleSaveProps) => {
   setTimeout(async () => {
     try {
@@ -61,6 +65,8 @@ export const handleSave = async ({
             Title: editTitle,
             description: editDescription.trim() || null,
             Due: dueToUpdate,
+            Tags: tags,
+            Priority: Priority,
           },
         })
       );

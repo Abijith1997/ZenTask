@@ -1,4 +1,4 @@
-import { Note, Task } from "@/Interface/Types";
+import { Task } from "@/Interface/Types";
 import { Gemini } from "./HomeView/Gemini/Gemini";
 import { HomeView } from "./HomeView/HomeView";
 import { CreateNew } from "./CreateNew/CreateNew";
@@ -8,19 +8,30 @@ import { useEffect, useState } from "react";
 import { CreateNewMobile } from "./CreateNew/CreateNewMobile";
 import { FloatingContainer } from "./CreateNew/Floating";
 import { cn } from "@/lib/utils";
+import { User } from "@supabase/supabase-js";
 
 interface MainAppProps {
   homeTasks: Task[];
+  user: User;
+  filterActive: boolean;
+  filterCategory: string;
 }
 
-export const MainApp = ({ homeTasks }: MainAppProps) => {
+export const MainApp = ({
+  homeTasks,
+  user,
+  filterActive,
+  filterCategory,
+}: MainAppProps) => {
   const [open, setOpen] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
-  const note = {} as Note;
+  const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
+
   useEffect(() => {
-    console.log(open);
-  }, [open]);
+    console.log(selectedTask);
+  }, [selectedTask]);
+
   return (
     <div
       className="main-app
@@ -41,7 +52,15 @@ export const MainApp = ({ homeTasks }: MainAppProps) => {
           />
         </div>
         <div className="home-view-container flex flex-col items-center justify-center w-full h-full">
-          <HomeView homeTasks={homeTasks} />
+          <HomeView
+            user={user}
+            clicked={clicked}
+            setClicked={setClicked}
+            setSelectedItem={setSelectedItem}
+            setSelectedTask={setSelectedTask}
+            filterActive={filterActive}
+            filterCategory={filterCategory}
+          />
         </div>
         <div className="fixed sm:hidden bottom-5 right-10 z-50 flex items-center justify-center">
           <div className="button-container">
@@ -69,12 +88,12 @@ export const MainApp = ({ homeTasks }: MainAppProps) => {
           </div>
         </div>
         {clicked && (
-          <div className="for-floating z-[1000] absolute top-0 left-0 w-screen h-screen flex items-center justify-center backdrop-blur-sm">
+          <div className="for-floating z-[1000] fixed top-0 left-0 w-screen h-full flex items-center justify-center backdrop-blur-sm">
             <FloatingContainer
               clicked={clicked}
               setClicked={setClicked}
-              note={note}
               selectedItem={selectedItem}
+              selectedTask={selectedTask}
             />
           </div>
         )}

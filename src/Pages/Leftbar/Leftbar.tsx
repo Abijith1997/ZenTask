@@ -7,44 +7,103 @@ import {
 } from "@radix-ui/react-accordion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { IconHome, IconListCheck, IconNotes } from "@tabler/icons-react";
+import {
+  IconCaretDown,
+  IconHome,
+  IconListCheck,
+  IconNotes,
+} from "@tabler/icons-react";
 import { handleNavigation } from "../Functions/Functions";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
 
 interface LeftBarProps {
   setCurrentPage: (value: string) => void;
+  isFilterActive: (value: boolean) => void;
+  setFilterCategory: (value: string) => void;
+  filterActive: boolean;
+  filterCategory: string;
 }
 
 type CategoryType = {
   id: string;
   name: string;
-  count: number;
+  background: string;
 };
 
-export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export const LeftBar = ({
+  setCurrentPage,
+  isFilterActive,
+  setFilterCategory,
+  filterActive,
+  filterCategory,
+}: LeftBarProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [options, setOptions] = useState(false);
   const callHandleNavigation = (page: string) => {
     handleNavigation({ page, setCurrentPage });
   };
 
   const [categories] = useState<CategoryType[]>([
-    { id: "all", name: "All Tasks", count: 18 },
-    { id: "today", name: "Today", count: 5 },
-    { id: "upcoming", name: "Upcoming", count: 8 },
-    { id: "completed", name: "Completed", count: 12 },
+    {
+      id: "all",
+      name: "All Tasks",
+      background: "bg-background hover:text-white",
+    },
+    {
+      id: "personal",
+      name: "Personal",
+      background: "bg-red-400 hover:bg-red-600 hover:text-white",
+    },
+    {
+      id: "work",
+      name: "Work",
+      background: "bg-blue-400 hover:bg-blue-600  hover:text-white",
+    },
+    {
+      id: "idea",
+      name: "Ideas",
+      background: "bg-yellow-400 hover:bg-yellow-600 hover:text-white",
+    },
   ]);
 
   useEffect(() => {
-    setIsCollapsed(true);
+    setIsCollapsed(false);
   }, []);
 
-  // const [tags] = useState([
-  //   { id: "work", name: "Work", color: "bg-blue-500" },
-  //   { id: "personal", name: "Personal", color: "bg-purple-500" },
-  //   { id: "urgent", name: "Urgent", color: "bg-red-500" },
-  //   { id: "ideas", name: "Ideas", color: "bg-green-500" },
-  // ]);
+  const expandTasks = () => {
+    const create = document.querySelector(".create-new-container");
+    const gemini = document.querySelector(".whole-gemini");
+    const addClass = () => {
+      create?.classList.add("sm:hidden");
+      gemini?.classList.add("hidden");
+    };
+    isCollapsed ? addClass() : setOptions(!options);
+  };
+
+  const displayMain = () => {
+    const create = document.querySelector(".create-new-container");
+    const gemini = document.querySelector(".whole-gemini");
+    create?.classList.remove("sm:hidden");
+    gemini?.classList.remove("hidden");
+  };
+
+  const filterTasksbyCategory = (category: string) => {
+    if (category === "all") {
+      isFilterActive(false);
+      setFilterCategory("all");
+      return;
+    }
+    if (category === filterCategory && filterActive) {
+      isFilterActive(!filterActive);
+      return;
+    } else if (filterActive && category !== filterCategory) {
+      setFilterCategory(category);
+    } else {
+      isFilterActive(!filterActive);
+      setFilterCategory(category);
+    }
+  };
 
   return (
     <>
@@ -79,7 +138,7 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
                   "nav-button w-full flex items-center justify-center border-1 cursor-pointer hover:bg-blue-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50 border-blue-300",
                   isCollapsed ? "border-l-1" : "border-l-5"
                 )}
-                onClick={() => callHandleNavigation("Main")}
+                onClick={() => displayMain()}
                 variant={"ghost"}
               >
                 <div
@@ -107,30 +166,46 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
                 <AccordionItem value="item-1" className="w-full ">
                   <AccordionTrigger className="w-full !p-0">
                     <Button
+                      asChild
                       className={cn(
-                        "nav-button w-full flex items-center justify-center border-red-300 border-1 cursor-pointer hover:bg-red-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50",
+                        "nav-button w-full flex items-center relative justify-center border-red-300 border-1 cursor-pointer hover:bg-red-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50",
                         isCollapsed ? "border-l-1" : "border-l-5"
                       )}
-                      onClick={() => callHandleNavigation("Task")}
+                      onClick={() => expandTasks()}
                       variant={"ghost"}
                     >
                       <div
                         className={cn(
                           "group-link items-center justify-center flex",
-                          !isCollapsed && "gap-[0.5rem]"
+                          isCollapsed ? "gap-0" : "gap-[0.5rem]"
                         )}
                       >
-                        <IconListCheck className="text-[#1c1d16] transition-colors" />
+                        <IconListCheck
+                          className={cn(
+                            "text-[#1c1d16] transition-colors",
+                            isCollapsed && "absolute"
+                          )}
+                        />
                         <p
                           className={cn(
                             "transition-all duration-300 overflow-hidden whitespace-nowrap",
                             isCollapsed
-                              ? "opacity-0 max-w-0"
-                              : "opacity-100 max-w-[200px]" // adjust max-w as needed
+                              ? "opacity-0 max-w-0 scale-x-0"
+                              : "opacity-100 max-w-[200px]"
                           )}
                         >
                           Tasks
                         </p>
+                        <div
+                          className={cn(
+                            "transition-all duration-300 overflow-hidden whitespace-nowrap",
+                            isCollapsed
+                              ? "opacity-0 max-w-0 scale-x-0"
+                              : "opacity-100 max-w-[200px]"
+                          )}
+                        >
+                          <IconCaretDown />
+                        </div>
                       </div>
                     </Button>
                   </AccordionTrigger>
@@ -141,9 +216,11 @@ export const LeftBar = ({ setCurrentPage }: LeftBarProps) => {
                           <li key={category.id}>
                             <Button
                               className={cn(
-                                "w-full flex items-center bg-transparent text-[var(--secondary-text-color)] hover:bg-black/20"
+                                "w-full bg-background text-black",
+                                category.background
                               )}
-                              variant={"default"}
+                              variant={"outline"}
+                              onClick={() => filterTasksbyCategory(category.id)}
                             >
                               {category.name}
                             </Button>

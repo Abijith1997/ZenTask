@@ -1416,9 +1416,9 @@ export const GeminiSVG = () => {
           gradientUnits="userSpaceOnUse"
           gradientTransform="matrix(16.1326 5.4553 -43.70045 129.2322 1.588 6.503)"
         >
-          <stop offset=".067" stop-color="#9168C0" />
-          <stop offset=".343" stop-color="#5684D1" />
-          <stop offset=".672" stop-color="#1BA1E3" />
+          <stop offset=".067" stopColor="#9168C0" />
+          <stop offset=".343" stopColor="#5684D1" />
+          <stop offset=".672" stopColor="#1BA1E3" />
         </radialGradient>
       </defs>
     </svg>
@@ -1440,12 +1440,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_0" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1454,12 +1454,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_1" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#376045"
+            stopColor="#376045"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1468,12 +1468,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_2" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#2a523d"
+            stopColor="#2a523d"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#376045"
+            stopColor="#376045"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1482,12 +1482,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_3" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#2a523d"
+            stopColor="#2a523d"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#1e4435"
+            stopColor="#1e4435"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1496,12 +1496,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_4" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#13372c"
+            stopColor="#13372c"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#1e4435"
+            stopColor="#1e4435"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1510,12 +1510,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad1_5" x1="43.8%" y1="0%" x2="100%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#13372c"
+            stopColor="#13372c"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#0a2a23"
+            stopColor="#0a2a23"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1524,12 +1524,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_0" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1538,12 +1538,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_1" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#376045"
+            stopColor="#376045"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#466e4d"
+            stopColor="#466e4d"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1552,12 +1552,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_2" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#376045"
+            stopColor="#376045"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#2a523d"
+            stopColor="#2a523d"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1566,12 +1566,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_3" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#1e4435"
+            stopColor="#1e4435"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#2a523d"
+            stopColor="#2a523d"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1580,12 +1580,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_4" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#1e4435"
+            stopColor="#1e4435"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#13372c"
+            stopColor="#13372c"
             stop-opacity="1"
           ></stop>
         </linearGradient>
@@ -1594,12 +1594,12 @@ export const BackgroundSVG = () => {
         <linearGradient id="grad2_5" x1="0%" y1="0%" x2="56.3%" y2="100%">
           <stop
             offset="14.444444444444446%"
-            stop-color="#0a2a23"
+            stopColor="#0a2a23"
             stop-opacity="1"
           ></stop>
           <stop
             offset="85.55555555555554%"
-            stop-color="#13372c"
+            stopColor="#13372c"
             stop-opacity="1"
           ></stop>
         </linearGradient>

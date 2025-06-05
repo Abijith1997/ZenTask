@@ -1,21 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../Store";
-import {
-  IconCheck,
-  IconPencil,
-  IconTrashFilled,
-  IconX,
-} from "@tabler/icons-react";
+import { IconCheck, IconPencil, IconTrashFilled } from "@tabler/icons-react";
 import { format, formatDistanceToNow, differenceInMinutes } from "date-fns";
 import { DisplayTasksProps } from "@/Interface/Types";
 import { cn } from "@/lib/utils";
-import { DateTimePicker } from "../../Home/MainApp/CreateNew/AddNew/Task/DateTime/DateTime";
 import {
   deleteTask,
   getDueColor,
   handleCheck,
-  handleSave,
 } from "./Parts/Functions/taskFunctions";
 import { GeminiSVG } from "@/SVG/SVGs";
 import { GeminiHTMLViewer } from "./Parts/GeminiParser";
@@ -23,20 +16,28 @@ import {
   handleGeminiSave,
   invokeGemini,
 } from "./Parts/Functions/GeminiFunctions";
+import { TagRenderer } from "./Parts/TagRenderer";
 
 export const DisplayTasks = ({
   task,
   checked,
   setChecked,
+  clicked,
+  setClicked,
+  setSelectedItem,
+  setSelectedTask,
 }: DisplayTasksProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(task.Title);
-  const [editDescription, setEditDescription] = useState(
-    task.description ?? ""
-  );
-  const [selectedTime, setSelectedTime] = useState(task.Due ?? "");
-  const [showMoreFields, setShowMoreFields] = useState(false);
+  const [borderColor, setBorderColor] = useState<string>("");
+  const [tags, setTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (task?.Tags) {
+      setTags(String(task.Tags).split(","));
+    } else {
+      setTags([]);
+    }
+  }, [task?.Tags]);
   const editorRef = useRef<HTMLDivElement>(null);
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -50,6 +51,16 @@ export const DisplayTasks = ({
   useEffect(() => {
     setChecked(task.completed);
   }, [task.completed]);
+
+  useEffect(() => {
+    task.Priority === "High"
+      ? setBorderColor("border-l-5 border-red-400")
+      : task.Priority === "Medium"
+      ? setBorderColor("border-l-5 border-orange-400")
+      : task.Priority === "Low"
+      ? setBorderColor("border-l-5 border-yellow-500")
+      : setBorderColor("border-primary");
+  });
 
   useEffect(() => {
     const taskEl = innerRef.current;
@@ -76,61 +87,71 @@ export const DisplayTasks = ({
     };
   }, []);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        editorRef.current &&
-        !editorRef.current.contains(event.target as Node)
-      ) {
-        handleSave({
-          selectedTime,
-          dispatch,
-          task,
-          editTitle,
-          editDescription,
-          setIsEditing,
-        });
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (
+  //       editorRef.current &&
+  //       !editorRef.current.contains(event.target as Node)
+  //     ) {
+  //       handleSave({
+  //         selectedTime,
+  //         dispatch,
+  //         task,
+  //         editTitle,
+  //         editDescription,
+  //         setIsEditing,
+  //         tags,
+  //         Priority,
+  //       });
+  //     }
+  //   }
 
-    function handleEscapeKey(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        handleSave({
-          selectedTime,
-          dispatch,
-          task,
-          editTitle,
-          editDescription,
-          setIsEditing,
-        });
-      }
-    }
+  //   function handleEscapeKey(event: KeyboardEvent) {
+  //     if (event.key === "Escape") {
+  //       handleSave({
+  //         selectedTime,
+  //         dispatch,
+  //         task,
+  //         editTitle,
+  //         editDescription,
+  //         setIsEditing,
+  //         tags,
+  //         Priority,
+  //       });
+  //     }
+  //   }
 
-    if (isEditing) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEscapeKey);
-    }
+  //   if (isEditing) {
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //     document.addEventListener("keydown", handleEscapeKey);
+  //   }
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, [isEditing, editTitle, editDescription, selectedTime]);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //     document.removeEventListener("keydown", handleEscapeKey);
+  //   };
+  // }, [isEditing, editTitle, editDescription, selectedTime]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter")
-      handleSave({
-        selectedTime,
-        dispatch,
-        task,
-        editTitle,
-        editDescription,
-        setIsEditing,
-      });
-  };
+  // const handleKeyDown = (e: React.KeyboardEvent) => {
+  //   if (e.key === "Enter")
+  //     handleSave({
+  //       selectedTime,
+  //       dispatch,
+  //       task,
+  //       editTitle,
+  //       editDescription,
+  //       setIsEditing,
+  //       tags,
+  //       Priority,
+  //     });
+  // };
 
-  const handleDelete = () => {
-    deleteTask(task.id, dispatch);
+  //
+
+  const handleEdit = () => {
+    setSelectedItem("newTask");
+    setClicked(!clicked);
+    setSelectedTask(task);
   };
 
   const callHandleCheck = () => {
@@ -151,20 +172,26 @@ export const DisplayTasks = ({
     });
   };
 
-  const callHandleSave = () => {
-    handleSave({
-      selectedTime,
-      dispatch,
-      task,
-      editTitle,
-      editDescription,
-      setIsEditing,
-    });
+  // const callHandleSave = () => {
+  //   handleSave({
+  //     selectedTime,
+  //     dispatch,
+  //     task,
+  //     editTitle,
+  //     editDescription,
+  //     setIsEditing,
+  //     tags,
+  //     Priority,
+  //   });
+  // };
+
+  const handleDelete = () => {
+    deleteTask(task.id, dispatch);
   };
 
   return (
     <div
-      className=" outer-display-task w-full flex items-center justify-center sm:p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
+      className="outer-display-task w-full flex items-center justify-center sm:p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
       ref={outerRef}
     >
       <div
@@ -180,127 +207,66 @@ export const DisplayTasks = ({
           })
         }
       >
-        <div className="gemini-svg-inner w-[25px] sm:w-[22px] z-10 bg-secondary sm:rounded-3xl rounded-full p-1">
+        <div className="gemini-svg-inner w-[25px] sm:w-[22px] z-10 bg-gray-200 sm:rounded-3xl rounded-full p-1">
           <GeminiSVG />
         </div>
       </div>
 
       <div
-        className="display-task px-5 break-inside-avoid flex flex-col justify-start items-start rounded-[12px]  w-[90%]  transition-all duration-300 ease-in-out cursor-pointer relative z-10 hover:shadow-md hover:scale-[1.01] max-w-full bg-secondary"
+        className={cn(
+          "display-task px-5 break-inside-avoid flex flex-col justify-start items-start rounded-[12px] w-[90%]  transition-all duration-300 ease-in-out cursor-pointer relative z-0 hover:shadow-md hover:scale-[1.01] max-w-full border-1 border-black shadow-md",
+          borderColor
+        )}
         ref={innerRef}
       >
         <div
           ref={editorRef}
-          className={cn(
-            "individual-task flex items-center justify-center w-full py-5",
-            {
-              "h-auto": !isEditing,
-              "sm:h-[200px] max-w-[100%]": isEditing,
-              "gap-5": true,
-              "transition-all ease-in-out duration-300": true,
-            }
-          )}
-          onDoubleClick={() => setIsEditing(!isEditing)}
+          className="individual-task flex items-center justify-center w-full py-5 z-[-1] h-auto gap-5"
+          onDoubleClick={() => handleEdit()}
         >
-          <div
-            ref={editorRef}
-            className={cn(
-              "title-description-container flex flex-col  w-full gap-2",
-              {
-                "transition-opacity duration-[10000ms] ease-in-out": true,
-                "transition-all ease-in-out duration-300": isEditing,
-                "animate-[appear-edit_0.5s_ease-in-out]": isEditing,
-              }
-            )}
-          >
-            {isEditing ? (
-              <>
-                <input
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="task-title-input resize-none border-0 shadow-sm rounded-lg flex text-sm sm:p-4 p-2"
-                  autoFocus
-                />
-
-                {(editDescription || selectedTime || showMoreFields) && (
-                  <>
-                    <textarea
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      className="task-description-input resize-none border-0 shadow-sm rounded-lg flex text-sm p-4"
-                      placeholder="Add description..."
-                    />
-                    <div className="date-editor bg-red-500 rounded-lg w-[fit-content]">
-                      <DateTimePicker
-                        setSelectedTime={setSelectedTime}
-                        selectedTime={selectedTime}
-                      />
-                    </div>
-                  </>
+          <div className="title-description-container flex flex-col z-0 w-full gap-2">
+            <div className="title-description w-full !text-[var(--text-color)] flex flex-col gap-1">
+              <h1
+                className={cn(
+                  "task-title break-words uppercase !text-xl font-bold",
+                  checked ? "line-through" : ""
                 )}
+              >
+                {task.Title}
+              </h1>
+              {task.description && (
+                <p className="text-sm">{task.description}</p>
+              )}
+              {task.Due &&
+                (() => {
+                  const dueDate = new Date(task.Due);
+                  const minutesUntilDue = differenceInMinutes(
+                    dueDate,
+                    new Date()
+                  );
+                  const color = getDueColor({ minutesUntilDue, checked });
 
-                {!editDescription && !selectedTime && !showMoreFields && (
-                  <button
-                    className="more-button"
-                    onClick={() => setShowMoreFields(true)}
-                    title="Add description or due date"
-                    onMouseDown={(e) => e.preventDefault()}
-                  >
-                    ⋯
-                  </button>
-                )}
-              </>
-            ) : (
-              <div className="title-description w-full !text-[var(--text-color)] text-sm sm:text-md">
-                <h2
-                  className={cn(
-                    "task-title break-words uppercase ",
-                    checked ? "line-through" : ""
-                  )}
-                >
-                  {editTitle}
-                </h2>
-                {editDescription && (
-                  <p className="text-xs text-white">{editDescription}</p>
-                )}
-                {selectedTime &&
-                  (() => {
-                    const dueDate = new Date(selectedTime);
-                    const minutesUntilDue = differenceInMinutes(
-                      dueDate,
-                      new Date()
-                    );
-                    const color = getDueColor({ minutesUntilDue, checked });
-
-                    return (
-                      <p className={cn("text-[0.75rem]", color)}>
-                        ⏰ Due{" "}
-                        {formatDistanceToNow(dueDate, { addSuffix: true })}
-                        {", "}
-                        {format(dueDate, "dd MMM, hh:mm a")}
-                      </p>
-                    );
-                  })()}
+                  return (
+                    <p className={cn("text-[12px]", color)}>
+                      ⏰ Due {formatDistanceToNow(dueDate, { addSuffix: true })}
+                      {", "}
+                      {format(dueDate, "dd MMM, hh:mm a")}
+                    </p>
+                  );
+                })()}
+              <div className="tags">
+                <TagRenderer tags={tags} />
               </div>
-            )}
+            </div>
           </div>
           <div className="manipulation-group  flex items-center justify-center flex-col gap-5">
             <div>
               <div className="delete-task relative flex items-center justify-center ">
                 <button
                   className="edit-button duration-300 ease-in-out transition-all scale-100"
-                  onClick={() => setIsEditing(!isEditing)}
+                  onClick={() => handleEdit()}
                 >
-                  {isEditing ? (
-                    <IconX
-                      className="close-icon duration-300 ease-in-out transition-all scale-100 "
-                      size={15}
-                    />
-                  ) : (
-                    <IconPencil className="edit-icon" size={15} />
-                  )}
+                  <IconPencil className="edit-icon" size={15} />
                 </button>
 
                 <button className="delete-button " onClick={handleDelete}>
@@ -325,11 +291,6 @@ export const DisplayTasks = ({
                 </div>
               </div>
             </div>
-            {isEditing && (
-              <button className={button} onClick={() => callHandleSave()}>
-                Save
-              </button>
-            )}
           </div>
         </div>
 

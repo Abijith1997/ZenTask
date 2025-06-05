@@ -9,11 +9,12 @@ import { LeftBar } from "../Leftbar/Leftbar";
 import { Navbar } from "../Navbar/Navbar";
 import { MainApp } from "./MainApp/MainApp";
 import { NotePage } from "./MainApp/NotePage/NotePage";
-import { TaskPage } from "./MainApp/TaskPage/TaskPage";
 import { Profile } from "../Profile/Profile";
 
 export const Home = ({ user }: { user: User }) => {
   const [currentPage, setCurrentPage] = useState<string>("Main");
+  const [filterActive, isFilterActive] = useState<boolean>(false);
+  const [filterCategory, setFilterCategory] = useState<string>("");
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const [homeTasks, setHomeTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -81,39 +82,29 @@ export const Home = ({ user }: { user: User }) => {
   }, [tasks]);
 
   useEffect(() => {
-    console.log(currentPage);
-  });
-
-  useEffect(() => {
-    console.log(currentPage);
     const mainApp = document.querySelector(".main-app");
-    const TaskPage = document.querySelector(".task-page");
     const NotePage = document.querySelector(".note-page");
     const ProfilePage = document.querySelector(".profile-page");
 
     switch (currentPage) {
       case "Main": {
-        TaskPage?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         mainApp?.classList.remove("inactive");
         break;
       }
       case "Note": {
         NotePage?.classList.remove("inactive");
-        TaskPage?.classList.add("inactive");
         mainApp?.classList.add("inactive");
         ProfilePage?.classList.add("hidden");
         break;
       }
       case "Task": {
-        TaskPage?.classList.remove("inactive");
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         ProfilePage?.classList.add("hidden");
         break;
       }
       case "Profile": {
-        TaskPage?.classList.add("inactive");
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         ProfilePage?.classList.remove("hidden");
@@ -121,17 +112,22 @@ export const Home = ({ user }: { user: User }) => {
       }
 
       default:
-        TaskPage?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         ProfilePage?.classList.add("hidden");
     }
   }, [currentPage]);
 
   return (
-    <div className="App bg-[#f5f6f3] min-h-screen flex items-start justify-start min-w-screen flex-col relative">
+    <div className="App bg-background min-h-screen flex items-start justify-start min-w-screen flex-col relative">
       <div className="in-app w-full">
         <div className="hidden sm:block fixed z-150">
-          <LeftBar setCurrentPage={setCurrentPage} />
+          <LeftBar
+            setCurrentPage={setCurrentPage}
+            isFilterActive={isFilterActive}
+            filterActive={filterActive}
+            setFilterCategory={setFilterCategory}
+            filterCategory={filterCategory}
+          />
         </div>
         <div className="sticky z-100 top-0 p-[0.1rem]">
           <Navbar user={user} setCurrentPage={setCurrentPage} />
@@ -141,9 +137,12 @@ export const Home = ({ user }: { user: User }) => {
           {loading ? (
             <div>Loading...</div>
           ) : currentPage === "Main" ? (
-            <MainApp homeTasks={homeTasks} />
-          ) : currentPage === "Task" ? (
-            <TaskPage user={user} />
+            <MainApp
+              homeTasks={homeTasks}
+              user={user}
+              filterCategory={filterCategory}
+              filterActive={filterActive}
+            />
           ) : currentPage === "Note" ? (
             <NotePage user={user} />
           ) : currentPage === "Profile" ? (

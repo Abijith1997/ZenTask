@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { IconX } from "@tabler/icons-react";
-import { Note } from "@/Interface/Types";
+import { Note, Task } from "@/Interface/Types";
 import { AddTask } from "./AddNew/Task/AddTask";
 import { AddNote } from "./AddNew/Note/AddNote";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ interface FloatingContainerProps {
   selectedItem: string | null;
   note?: Note;
   content?: string;
+  selectedTask?: Task;
 }
 
 export const FloatingContainer = ({
@@ -19,9 +20,11 @@ export const FloatingContainer = ({
   selectedItem,
   note,
   content,
+  selectedTask,
 }: FloatingContainerProps) => {
   const floatref = useRef<HTMLDivElement | null>(null);
   const dateRef = useRef<HTMLDivElement | null>(null);
+  const ddmRef = useRef<HTMLDivElement | null>(null);
   const [selectingDate, setSelectingDate] = useState(false);
   const [color, setColor] = useState("bg-secondary");
 
@@ -40,13 +43,17 @@ export const FloatingContainer = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dateRef?.current && !dateRef.current.contains(event.target as Node)) {
+      if (
+        (dateRef?.current && !dateRef.current.contains(event.target as Node)) ||
+        (ddmRef?.current && !ddmRef.current.contains(event.target as Node))
+      ) {
         return;
       } else if (
         clicked &&
         floatref.current &&
         !floatref.current.contains(event.target as Node)
       ) {
+        console.log("Here");
         setClicked(false);
       }
     };
@@ -72,6 +79,8 @@ export const FloatingContainer = ({
             dateRef={dateRef}
             selectingDate={selectingDate}
             setSelectingDate={setSelectingDate}
+            ddmRef={ddmRef}
+            task={selectedTask}
           />
         );
       case "newNote":

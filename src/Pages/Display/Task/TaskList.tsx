@@ -1,60 +1,78 @@
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { DisplayTasks } from "./DisplayTasks";
-import { useSelector } from "react-redux";
 import { IconCaretDown } from "@tabler/icons-react";
-import { RootState } from "@/Store";
 import { Task } from "@/Interface/Types";
-import { supabase } from "@/supabaseClient";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
+import { getAndSetTasks } from "./GetAndSetTasks";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Store";
 
 interface TaskListProps {
   user: User;
+  clicked: boolean;
+  setClicked: (value: boolean) => void;
+  setSelectedItem: (value: string | null) => void;
+  setSelectedTask: (value: Task | undefined) => void;
+  filterCategory: string;
+  filterActive: boolean;
 }
 
-export const TaskList = ({ user }: TaskListProps) => {
-  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
-  const [localTasks, setLocalTasks] = useState<Task[]>([]);
+export const TaskList = ({
+  user,
+  clicked,
+  setClicked,
+  setSelectedItem,
+  setSelectedTask,
+  filterCategory,
+  filterActive,
+}: TaskListProps) => {
   const tasks = useSelector((state: RootState) => state.todo.tasks);
-  const [incompletedTasks, setIncompleteTasks] = useState<Task[]>(
-    localTasks.filter((task) => !task.completed)
-  );
-  const [completedTasks, setCompletedTasks] = useState<Task[]>(
-    localTasks.filter((task) => task.completed)
-  );
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
 
   useEffect(() => {
-    const getTasks = async () => {
-      const { data, error } = await supabase
-        .from("Todo")
-        .select()
-        .eq("uid", user?.id);
-      if (error) {
-        console.error("Error fetching tasks:", error);
-      } else {
-        const sortByDueDate = (a: Task, b: Task) => {
-          if (!a.Due) return 1;
-          if (!b.Due) return -1;
+    setFilteredTasks(tasks);
+  }, [tasks]);
 
-          return new Date(a.Due).getTime() - new Date(b.Due).getTime();
-        };
+  useEffect(() => {
+    console.log(filterCategory, "From Slice");
+    const afterFilter = tasks.filter((task) =>
+      Object.values(task.Tags || {}).includes(filterCategory)
+    );
+    console.log(afterFilter);
+    setFilteredTasks(afterFilter);
 
-        data.sort(sortByDueDate);
-        const checkedTasks = data.filter((task) => task.completed);
-        const uncheckedTasks = data.filter((task) => !task.completed);
-        const reorderedTasks = [...uncheckedTasks, ...checkedTasks];
-        setLocalTasks(reorderedTasks);
-        setCompletedTasks(reorderedTasks.filter((task) => task.completed));
-        setIncompleteTasks(reorderedTasks.filter((task) => !task.completed)); // Set loading to false once tasks are fetched
-      }
-    };
-    getTasks();
-  }, [tasks, user]);
+    const match = filteredTasks.some((task) =>
+      Object.values(task.Tags || {}).includes(filterCategory)
+    );
+
+    console.log("Does any task match the filter category?", match);
+    console.log(filterActive, "Filter Active State");
+  }, [filterActive, filterCategory]);
+
+  // filterTasksLocally: (state, action) => {
+  //       const filterCriteria = action.payload;
+  //       console.log(filterCriteria, "From Slice");
+  //       state.tasks = state.tasks.filter((task) =>
+  //         Object.values(task.Tags || {}).includes(filterCriteria)
+  //       );
+  //     },
+  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+  const [incompletedTasks, setIncompleteTasks] = useState<Task[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    getAndSetTasks({
+      user,
+      setCompletedTasks,
+      setIncompleteTasks,
+    });
+  }, [user]);
 
   const handleSetChecked = (id: string, value: boolean) => {
     setCheckedMap((prev) => ({ ...prev, [id]: value }));
@@ -62,17 +80,34 @@ export const TaskList = ({ user }: TaskListProps) => {
 
   return (
     <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center">
-      <h2 className="heading-task-status text-center underline uppercase mb-2 !text-md p-2">
-        Incomplete
-      </h2>
-      <div className="whole-task-list w-full lg:w-[60%] flex flex-col gap-2 items-center justify-center">
-        {incompletedTasks.length > 0 ? (
-          incompletedTasks.map((task) => (
+      <div className="whole-task-list w-full  flex flex-col gap-2 items-center justify-center">
+        {filterActive ? (
+          filteredTasks.map((task) => (
             <DisplayTasks
+              clicked={clicked}
+              setClicked={setClicked}
               key={task.id}
               task={task}
               checked={checkedMap[task.id] || false}
               setChecked={(value: boolean) => handleSetChecked(task.id, value)}
+              setSelectedItem={setSelectedItem}
+              setSelectedTask={setSelectedTask}
+            />
+          ))
+        ) : (
+          <li>No tasks found with the selected Tag</li>
+        )}
+        {!filterActive && incompletedTasks.length > 0 ? (
+          incompletedTasks.map((task) => (
+            <DisplayTasks
+              clicked={clicked}
+              setClicked={setClicked}
+              key={task.id}
+              task={task}
+              checked={checkedMap[task.id] || false}
+              setChecked={(value: boolean) => handleSetChecked(task.id, value)}
+              setSelectedItem={setSelectedItem}
+              setSelectedTask={setSelectedTask}
             />
           ))
         ) : (
@@ -102,12 +137,16 @@ export const TaskList = ({ user }: TaskListProps) => {
             </div>
           </AccordionTrigger>
           <AccordionContent className="complete-tasks w-full flex flex-col gap-2 items-center justify-center overflow-hidden transition-all duration-500 ease-in-out">
-            <div className="whole-task-list w-full lg:w-[60%] flex flex-col gap-2 items-center justify-center">
+            <div className="whole-task-list w-full flex flex-col gap-2 items-center justify-center">
               {completedTasks.length > 0 ? (
                 completedTasks.map((task) => (
                   <DisplayTasks
+                    clicked={clicked}
+                    setClicked={setClicked}
                     key={task.id}
                     task={task}
+                    setSelectedItem={setSelectedItem}
+                    setSelectedTask={setSelectedTask}
                     checked={checkedMap[task.id] || false}
                     setChecked={(value: boolean) =>
                       handleSetChecked(task.id, value)

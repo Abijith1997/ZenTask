@@ -264,14 +264,14 @@
 .gemini-loading {
   background: linear-gradient(
   45deg,
-  var(--background) 0%,
-  var(--primary) 20%,
-  var(--secondary) 40%,
-  var(--secondary) 60%,
-  var(--primary) 80%,
-  var(--background) 100%
+  #f1f1f1 0%,
+  #666 20%,
+  #ccc 40%,
+  #ccc 60%,
+  #666 80%,
+  #f1f1f1 100%
   );
-  background-size: 500% 100%;
+  background-size: 1000% 100%;
   animation: shimmer 10s infinite linear;
 }
 

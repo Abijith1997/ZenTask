@@ -25,13 +25,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
     setLoading(true);
     const timeNow = new Date();
     const timeOffset = timeNow.getTimezoneOffset();
-    console.log(timeOffset);
-    console.log(
-      homeTasks.map((task) => {
-        if (task.Due) new Date(task.Due);
-      })
-    );
-    console.log(timeNow);
+
     let taskPrompt = "";
     let count = 1;
     const filteredTasks = homeTasks.filter((task) => !task.completed);
@@ -54,10 +48,8 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
     Only provide answers inside div elements using classes and relevant inner tags. 
     This is for use in a dynamic webpage. 
     Also if sending back time, say the time as a normal person. Use my timezone and omit the usage of UTC, CET etc.
-    The content should be as you talk to a human.
+    Write as a sentence or provide steps to fulfil the task
     Also add text-xs classname to every element.`;
-    console.log(taskPrompt);
-    console.log(generalPrompt);
     try {
       const response = await ai.models.generateContent({
         model: "gemini-1.5-flash",
@@ -138,7 +130,7 @@ export const Gemini = ({ homeTasks }: GeminiProps) => {
             {loading}
           </span>
         ) : response ? (
-          <div className="gemini-response w-[80%] sm:w-full h-fit-content sm:max-h-[200px] rounded-[8px] sm:mb-10 bg-[#e8e9e2] p-1 overflow-auto text-[var(--text-color)] sm:text-xs relative z-10">
+          <div className="gemini-response w-[80%] sm:w-full h-fit-content rounded-[8px] sm:mb-10 bg-[#e8e9e2] p-1 overflow-auto text-[var(--text-color)] sm:text-xs relative z-10">
             <div className="relative z-10 w-full h-full bg-[#e8e9e2] p-2 sm:p-10 ">
               <div
                 className="response-content"
