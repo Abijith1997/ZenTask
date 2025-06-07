@@ -7,12 +7,7 @@ import {
 } from "@radix-ui/react-accordion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  IconCaretDown,
-  IconHome,
-  IconListCheck,
-  IconNotes,
-} from "@tabler/icons-react";
+import { IconCaretDown, IconHome, IconNotes } from "@tabler/icons-react";
 import { handleNavigation } from "../Functions/Functions";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
@@ -23,6 +18,7 @@ interface LeftBarProps {
   setFilterCategory: (value: string) => void;
   filterActive: boolean;
   filterCategory: string;
+  currentPage: string;
 }
 
 type CategoryType = {
@@ -37,6 +33,7 @@ export const LeftBar = ({
   setFilterCategory,
   filterActive,
   filterCategory,
+  currentPage,
 }: LeftBarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [options, setOptions] = useState(false);
@@ -68,7 +65,7 @@ export const LeftBar = ({
   ]);
 
   useEffect(() => {
-    setIsCollapsed(false);
+    setIsCollapsed(true);
   }, []);
 
   const expandTasks = () => {
@@ -78,14 +75,12 @@ export const LeftBar = ({
       create?.classList.add("sm:hidden");
       gemini?.classList.add("hidden");
     };
-    isCollapsed ? addClass() : setOptions(!options);
-  };
+    if (currentPage !== "Main" && isCollapsed) {
+      setCurrentPage("Main");
+      return;
+    }
 
-  const displayMain = () => {
-    const create = document.querySelector(".create-new-container");
-    const gemini = document.querySelector(".whole-gemini");
-    create?.classList.remove("sm:hidden");
-    gemini?.classList.remove("hidden");
+    isCollapsed ? addClass() : setOptions(!options);
   };
 
   const filterTasksbyCategory = (category: string) => {
@@ -133,35 +128,6 @@ export const LeftBar = ({
         <div className="flex-1 overflow-auto p-3">
           <div className="space-y-6">
             <div>
-              <Button
-                className={cn(
-                  "nav-button w-full flex items-center justify-center border-1 cursor-pointer hover:bg-blue-300 hover:text-white text-[var(--text-color)] hover:scale-105 transition-all ease-in-out delay-50 border-blue-300",
-                  isCollapsed ? "border-l-1" : "border-l-5"
-                )}
-                onClick={() => displayMain()}
-                variant={"ghost"}
-              >
-                <div
-                  className={cn(
-                    "group-link flex items-center justify-center transition-all duration-300",
-                    !isCollapsed && "gap-[0.5rem]"
-                  )}
-                >
-                  <IconHome className="text-[#1c1d16] transition-colors" />
-                  <p
-                    className={cn(
-                      "transition-all duration-300 overflow-hidden whitespace-nowrap",
-                      isCollapsed
-                        ? "opacity-0 max-w-0"
-                        : "opacity-100 max-w-[200px]"
-                    )}
-                  >
-                    Home
-                  </p>
-                </div>
-              </Button>
-            </div>
-            <div>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1" className="w-full ">
                   <AccordionTrigger className="w-full !p-0">
@@ -180,7 +146,7 @@ export const LeftBar = ({
                           isCollapsed ? "gap-0" : "gap-[0.5rem]"
                         )}
                       >
-                        <IconListCheck
+                        <IconHome
                           className={cn(
                             "text-[#1c1d16] transition-colors",
                             isCollapsed && "absolute"
@@ -194,7 +160,7 @@ export const LeftBar = ({
                               : "opacity-100 max-w-[200px]"
                           )}
                         >
-                          Tasks
+                          Home
                         </p>
                         <div
                           className={cn(
@@ -253,7 +219,7 @@ export const LeftBar = ({
                       "transition-all duration-300 overflow-hidden whitespace-nowrap",
                       isCollapsed
                         ? "opacity-0 max-w-0"
-                        : "opacity-100 max-w-[200px]" // adjust max-w as needed
+                        : "opacity-100 max-w-[200px]"
                     )}
                   >
                     Notes

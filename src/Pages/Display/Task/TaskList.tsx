@@ -55,13 +55,6 @@ export const TaskList = ({
     console.log(filterActive, "Filter Active State");
   }, [filterActive, filterCategory]);
 
-  // filterTasksLocally: (state, action) => {
-  //       const filterCriteria = action.payload;
-  //       console.log(filterCriteria, "From Slice");
-  //       state.tasks = state.tasks.filter((task) =>
-  //         Object.values(task.Tags || {}).includes(filterCriteria)
-  //       );
-  //     },
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
   const [incompletedTasks, setIncompleteTasks] = useState<Task[]>([]);
   const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
@@ -72,7 +65,7 @@ export const TaskList = ({
       setCompletedTasks,
       setIncompleteTasks,
     });
-  }, [user]);
+  }, [user, tasks]);
 
   const handleSetChecked = (id: string, value: boolean) => {
     setCheckedMap((prev) => ({ ...prev, [id]: value }));
@@ -82,21 +75,25 @@ export const TaskList = ({
     <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center">
       <div className="whole-task-list w-full  flex flex-col gap-2 items-center justify-center">
         {filterActive ? (
-          filteredTasks.map((task) => (
-            <DisplayTasks
-              clicked={clicked}
-              setClicked={setClicked}
-              key={task.id}
-              task={task}
-              checked={checkedMap[task.id] || false}
-              setChecked={(value: boolean) => handleSetChecked(task.id, value)}
-              setSelectedItem={setSelectedItem}
-              setSelectedTask={setSelectedTask}
-            />
-          ))
-        ) : (
-          <li>No tasks found with the selected Tag</li>
-        )}
+          filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <DisplayTasks
+                clicked={clicked}
+                setClicked={setClicked}
+                key={task.id}
+                task={task}
+                checked={checkedMap[task.id] || false}
+                setChecked={(value: boolean) =>
+                  handleSetChecked(task.id, value)
+                }
+                setSelectedItem={setSelectedItem}
+                setSelectedTask={setSelectedTask}
+              />
+            ))
+          ) : (
+            <li>No tasks found with the selected Tag</li>
+          )
+        ) : null}
         {!filterActive && incompletedTasks.length > 0 ? (
           incompletedTasks.map((task) => (
             <DisplayTasks

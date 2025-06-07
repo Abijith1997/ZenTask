@@ -24,14 +24,35 @@ interface DisplayNote {
 export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
-  const [color, setColor] = useState<string>(note?.color ?? "bg-secondary");
+  const [color, setColor] = useState<string>(note?.color ?? "bg-background");
   const [fontColor, setFontColor] = useState("text-primary");
   const [isEditing, setIsEditing] = useState(false);
+  const [dbColor, setDBColor] = useState(note?.color ?? "background");
   const selectedItem = "newNote";
   const bottomToolbar = useRef<HTMLDivElement | null>(null);
   const editButton = useRef<HTMLButtonElement | null>(null);
   const noteRef = useRef<HTMLDivElement | null>(null);
   const [colorChanged, setColorChanged] = useState(false);
+  useEffect(() => {
+    switch (note?.color) {
+      case "red":
+        setColor("bg-red-400");
+        setFontColor("text-black");
+        break;
+      case "blue":
+        setColor("bg-blue-500");
+        setFontColor("text-slate-800");
+        break;
+      case "green":
+        setColor("bg-green-700");
+        break;
+      case "yellow":
+        setColor("bg-yellow-300");
+        break;
+      default:
+        break;
+    }
+  }, [note?.color]);
 
   const handleEdit = (e: React.MouseEvent) => {
     if (bottomToolbar.current?.contains(e.target as Node)) {
@@ -81,11 +102,9 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
 
   const updateNote = async () => {
     if (!note) return; // safer check
-
     const updates = {
-      color: color,
+      color: dbColor,
     };
-
     try {
       console.log("in try block");
       const result = await dispatch(
@@ -102,25 +121,31 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
     color: string
   ) => {
     e.stopPropagation();
-    setChangingColor(false);
+    console.log("Changing color to:", color);
+    setChangingColor(!changingColor);
+    if (color === note?.color) {
+      console.log("Color is the same, not changing");
+      return;
+    }
+    setColorChanged(true);
     switch (color) {
       case "red":
-        setColor("bg-red-300");
-        setColorChanged(true);
+        setColor("bg-red-400");
         setFontColor("text-black");
+        setDBColor("red");
         break;
       case "blue":
         setColor("bg-blue-500");
-        setColorChanged(true);
         setFontColor("text-slate-800");
+        setDBColor("blue");
         break;
       case "green":
-        setColor("bg-lime-300");
-        setColorChanged(true);
+        setColor("bg-green-700");
+        setDBColor("green");
         break;
       case "yellow":
         setColor("bg-yellow-300");
-        setColorChanged(true);
+        setDBColor("yellow");
         break;
       default:
         break;
@@ -129,6 +154,7 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
 
   useEffect(() => {
     if (colorChanged) {
+      console.log("Color changed, updating note");
       updateNote();
       setColorChanged(false);
     }
@@ -164,27 +190,27 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
             ref={bottomToolbar}
           >
             <button
-              className="manipulate-button color-note-button hover:shadow-[inset_1px_1px_10px_rgba(0,0,0,0.3)] !rounded-full !p-2"
+              className="manipulate-button color-note-button hover:shadow-sm !rounded-full !p-2 hover:bg-black/10 hover:scale-105 transition-all duration-300 ease-in-out"
               onClick={handleColor}
             >
               <IconPaletteFilled size={14} className="all-unset" />
             </button>
 
             <button
-              className="manipulate-button pin-note-button hover:shadow-[inset_1px_1px_10px_rgba(0,0,0,0.3)] !rounded-full !p-2"
+              className="manipulate-button pin-note-button hover:shadow-sm hover:bg-black/10 !rounded-full !p-2 hover:scale-105 transition-all duration-300 ease-in-out"
               onClick={handlePin}
             >
               <IconPinFilled size={14} className="all-unset" />
             </button>
             <button
               ref={editButton}
-              className="manipulate-button edit-note-button hover:shadow-[inset_1px_1px_10px_rgba(0,0,0,0.3)] !rounded-full !p-2"
+              className="manipulate-button edit-note-button hover:shadow-sm hover:bg-black/10 !rounded-full !p-2 hover:scale-105 transition-all duration-300 ease-in-out"
               onClick={handleEdit}
             >
               <IconPencil size={14} className="all-unset" />
             </button>
             <button
-              className="manipulate-button delete-note-button hover:shadow-[inset_1px_1px_10px_rgba(0,0,0,0.3)] !rounded-full !p-2"
+              className="manipulate-button delete-note-button hover:shadow-sm hover:bg-black/10 !rounded-full !p-2 transition-all duration-300 ease-in-out hover:scale-105"
               onClick={handleDelete}
             >
               <IconTrashFilled size={14} className="all-unset" />

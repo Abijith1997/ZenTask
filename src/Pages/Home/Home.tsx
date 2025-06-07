@@ -98,19 +98,12 @@ export const Home = ({ user }: { user: User }) => {
         ProfilePage?.classList.add("hidden");
         break;
       }
-      case "Task": {
-        mainApp?.classList.add("inactive");
-        NotePage?.classList.add("inactive");
-        ProfilePage?.classList.add("hidden");
-        break;
-      }
       case "Profile": {
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
         ProfilePage?.classList.remove("hidden");
         break;
       }
-
       default:
         NotePage?.classList.add("inactive");
         ProfilePage?.classList.add("hidden");
@@ -127,6 +120,7 @@ export const Home = ({ user }: { user: User }) => {
             filterActive={filterActive}
             setFilterCategory={setFilterCategory}
             filterCategory={filterCategory}
+            currentPage={currentPage}
           />
         </div>
         <div className="sticky z-100 top-0 p-[0.1rem]">

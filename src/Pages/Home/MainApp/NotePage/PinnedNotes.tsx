@@ -15,15 +15,13 @@ export const PinnedNotes = ({ pinnedNotes }: pinnedNotesProps) => {
       </div>
       <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
         {pinnedNotes.length > 0 ? (
-          pinnedNotes.map((note) => (
-            <>
-              <DisplayNotes
-                key={note.id}
-                note={note}
-                content={note.Content}
-                image={note.Image}
-              />
-            </>
+          pinnedNotes.map((note, index) => (
+            <DisplayNotes
+              key={note.id ?? `note-${index}`}
+              note={note}
+              content={note.Content}
+              image={note.Image}
+            />
           ))
         ) : (
           <li>No notes found</li>

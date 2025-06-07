@@ -14,13 +14,13 @@ import { insertNoteInDB, updateNoteInDB } from "@/Slices/NoteSlice";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface AddNoteProps {
   clicked: boolean; // Function to notify the parent that task was added
   setClicked: (clicked: boolean) => void;
   note?: Note;
   content?: string;
-  color: string;
   setColor: (color: string) => void;
 }
 
@@ -29,11 +29,11 @@ export const AddNote = ({
   setClicked,
   note,
   content,
-  color,
   setColor,
 }: AddNoteProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [fontColor, setFontColor] = useState("text-primary");
+  const [fontColor, setFontColor] = useState("!text-black");
   const [title, setTitle] = useState<string>(note?.Title ?? "");
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
@@ -41,6 +41,8 @@ export const AddNote = ({
   const [isPinned, setIsPinned] = useState(false);
   const [image, setImage] = useState<File | string | null>(note?.Image || null);
   const bottomToolbar = useRef<HTMLDivElement | null>(null);
+  const [placeholderColor, setplaceholderColor] = useState("text-secondary");
+  const [dbColor, setDBColor] = useState<string>("");
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("image upload clicked");
@@ -97,7 +99,6 @@ export const AddNote = ({
       }
 
       if (!isEmptyNote) {
-        // ✏️ Update existing note
         const noteUpdate = {
           id: note!.id,
           updates: {
@@ -111,7 +112,6 @@ export const AddNote = ({
         const result = await dispatch(updateNoteInDB(noteUpdate)).unwrap();
         console.log("Note updated:", result);
       } else {
-        // 🆕 Insert new note
         const newNote: Note = {
           id: crypto.randomUUID(),
           Content: description,
@@ -121,7 +121,7 @@ export const AddNote = ({
           Pinned: isPinned,
           updatedAt: new Date().toISOString(),
           Image: imageURL,
-          color: color,
+          color: dbColor,
         };
         const result = await dispatch(insertNoteInDB(newNote)).unwrap();
         console.log("Note inserted:", result);
@@ -138,7 +138,8 @@ export const AddNote = ({
     }
   };
 
-  const handleColor = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleColor = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("Color button clicked");
     e.stopPropagation();
     if (bottomToolbar) {
       setChangingColor(!changingColor);
@@ -153,18 +154,25 @@ export const AddNote = ({
     setChangingColor(false);
     switch (color) {
       case "red":
-        setColor("bg-red-300");
-        setFontColor("text-black");
+        setDBColor("red");
+        setColor("bg-red-400");
+        setplaceholderColor("placeholder:text-gray-800");
         break;
       case "blue":
+        setDBColor("blue");
         setColor("bg-blue-500");
-        setFontColor("text-slate-800");
+        setFontColor("!text-slate-800");
+        setplaceholderColor("placeholder:text-gray-800");
         break;
       case "green":
-        setColor("bg-lime-300");
+        setDBColor("green");
+        setColor("bg-green-700");
+        setplaceholderColor("placeholder:text-gray-800");
         break;
       case "yellow":
+        setDBColor("yellow");
         setColor("bg-yellow-300");
+        setplaceholderColor("placeholder:text-gray-800");
         break;
       default:
         break;
@@ -176,6 +184,13 @@ export const AddNote = ({
     setChangingColor(false);
   };
 
+  const handleButtonClick = () => {
+    console.log("Button clicked");
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
+
   return (
     clicked && (
       <div
@@ -184,8 +199,8 @@ export const AddNote = ({
           fontColor
         )}
       >
-        <div className="w-full flex justify-center items-center">
-          <h2 className="text-md  font-bold underline mb-5">New Note</h2>
+        <div className="w-full flex justify-center items-start">
+          <h2 className="text-md font-bold underline mb-5">New Note</h2>
         </div>
 
         {typeof image === "string" && (
@@ -210,14 +225,21 @@ export const AddNote = ({
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="test-title border-0 border-b-1 !rounded-none border-primary"
+            className={cn(
+              "test-title border-0 !rounded-0 border-b-1  border-primary p-1  placeholder:p-1",
+              fontColor,
+              placeholderColor
+            )}
             placeholder="Title"
           />
-
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="test-description resize-none mt-5 border border-primary"
+            className={cn(
+              "test-description resize-none  border-primary h-[100px] border-!rounded-0 p-1 focus:outline-none focus:ring-0 focus:border-primary placeholder:p-1",
+              fontColor,
+              placeholderColor
+            )}
             placeholder="Write Note"
           />
         </div>
@@ -226,62 +248,76 @@ export const AddNote = ({
             className="bottom-bar flex justify-between items-center w-full p-5"
             ref={bottomToolbar}
           >
-            <div
-              className="color-picker bottom-button cursor-pointer hover:bg-accent p-2 rounded-full"
-              onClick={handleColor}
+            <Button
+              variant="outline"
+              className="color-picker bottom-button cursor-pointer hover:bg-accent p-2 !rounded-full "
+              onClick={(e) => handleColor(e)}
             >
               <IconPalette color="var(--primary)" />
-            </div>
+            </Button>
 
-            <span
+            <Button
+              variant="outline"
               onClick={() => setIsPinned((prev) => !prev)}
-              className="pin-button bottom-button cursor-pointer hover:bg-accent p-2 rounded-full"
+              className={cn(
+                "pin-button bottom-button cursor-pointer hover:bg-accent p-2 !rounded-full",
+                isPinned ? "bg-accent border-black text-white" : ""
+              )}
             >
-              <IconPin color="var(--primary)" />
-            </span>
+              <IconPin color={cn(isPinned ? "white" : "black")} />
+            </Button>
 
-            <div
+            <Button
               style={{ cursor: "pointer" }}
-              className="image-upload bottom-button cursor-pointer hover:bg-accent p-2 rounded-full transition "
+              variant={"outline"}
+              className="image-upload bottom-button cursor-pointer hover:bg-accent p-2 !rounded-full transition "
+              onClick={handleButtonClick}
             >
               <IconPhoto size={20} color="var(--primary)" />
               <input
                 type="file"
                 accept="image/*"
+                ref={inputRef}
                 onChange={handleImageUpload}
                 style={{ display: "none" }}
               />
-            </div>
+            </Button>
           </div>
         ) : (
-          <div className="color-toolbar text-primary opacity-100 mt-5 w-full mb-2 h-8 bottom-0 left-0 rounded-b-lg flex fill-primary items-center justify-between p-2 gap-2 transition-opacity duration-300 ease-in-out">
-            <button
-              className="bg-secondary-300 !rounded-full !p-1 ml-1 cursor-pointer hover:scale-105"
+          <div className="color-toolbar text-primary opacity-100 mt-5 w-full mb-2 h-10 flex items-center justify-between p-2 transition-opacity duration-300 ease-in-out">
+            <Button
+              className=" !rounded-full cursor-pointer hover:scale-105 h-8 w-8 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-transparent"
+              style={{ cursor: "pointer" }}
               onClick={(e) => handleColorBack(e)}
+              variant={"ghost"}
             >
-              <IconCircleX />
-            </button>
-            <button
-              className="bg-green-300 !rounded-full !p-2 border border-secondary hover:scale-105"
+              <IconCircleX color="black" size={20} />
+            </Button>
+            <Button
+              className="bg-green-300 !rounded-full !p-2 hover:scale-105 h-5 w-5 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-green-500"
               onClick={(e) => changeColor(e, "green")}
-            ></button>
-            <button
-              className="bg-red-300 !rounded-full !p-2 border border-secondary hover:scale-105"
+              variant={"ghost"}
+            ></Button>
+            <Button
+              className="bg-red-300 !rounded-full !p-2 hover:scale-105 h-5 w-5 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-green-500"
               onClick={(e) => changeColor(e, "red")}
-            ></button>
-            <button
-              className="bg-blue-300 !rounded-full !p-2 border border-secondary hover:scale-105"
+              variant={"ghost"}
+            ></Button>
+            <Button
+              className="bg-blue-300 !rounded-full !p-2 hover:scale-105 h-5 w-5 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-green-500"
               onClick={(e) => changeColor(e, "blue")}
-            ></button>
-            <button
-              className="bg-yellow-300 !rounded-full !p-2 mr-1 border border-secondary hover:scale-105"
+              variant={"ghost"}
+            ></Button>
+            <Button
+              className="bg-yellow-300 !rounded-full !p-2 hover:scale-105 h-5 w-5 flex items-center justify-center transition-all duration-200 ease-in-out hover:bg-green-500"
               onClick={(e) => changeColor(e, "yellow")}
-            ></button>
+              variant={"ghost"}
+            ></Button>
           </div>
         )}
         <div className="button-container justify-end flex w-full">
           <button
-            className="save-button bg-primary w-20 text-secondary"
+            className="save-button bg-primary w-20 text-white hover:text-black hover:bg-secondary transition-all duration-300 ease-in-out rounded-md p-2"
             onClick={handleSave}
           >
             Save

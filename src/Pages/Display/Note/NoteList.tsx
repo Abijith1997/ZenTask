@@ -1,5 +1,6 @@
 import { Note } from "@/Interface/Types";
 import { DisplayNotes } from "./DisplayNotes";
+import React from "react";
 
 interface NoteListProps {
   localNotes: Note[];
@@ -15,14 +16,14 @@ export const NoteList = ({ localNotes }: NoteListProps) => {
       <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
         {localNotes.length > 0 ? (
           localNotes.map((note) => (
-            <>
+            <React.Fragment key={note.id}>
               <DisplayNotes
                 key={note.id}
                 note={note}
                 content={note.Content}
                 image={note.Image}
               />
-            </>
+            </React.Fragment>
           ))
         ) : (
           <li>No notes found</li>

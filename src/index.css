@@ -176,3 +176,7 @@ button {
   z-index: -1;
   background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5530 100%);
 }
+
+.test-title, .test-description {
+  border-radius: 0px;
+}
