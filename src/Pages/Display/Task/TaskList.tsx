@@ -97,7 +97,6 @@ export const TaskList = ({
               setSelectedTask={setSelectedTask}
             />
           ))}
-        !!!!!!!!!!!!!!!!!
       </div>
       <Accordion type="single" collapsible asChild>
         <AccordionItem

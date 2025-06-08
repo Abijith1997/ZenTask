@@ -20,7 +20,7 @@ export const sortTasks = ({
 
   let sortedTasks = tasks;
   switch (sortCriterion) {
-    case "dateAsc":
+    case "dateDesc":
       sortedTasks.sort((a, b) => {
         const dateDiff =
           new Date(a.Due || 0).getTime() - new Date(b.Due || 0).getTime();
@@ -31,7 +31,7 @@ export const sortTasks = ({
       });
       break;
 
-    case "dateDesc":
+    case "dateAsc":
       sortedTasks.sort((a, b) => {
         const dateDiff =
           new Date(b.Due || 0).getTime() - new Date(a.Due || 0).getTime();
@@ -42,7 +42,7 @@ export const sortTasks = ({
       });
       break;
 
-    case "priorityAsc":
+    case "priorityDesc":
       sortedTasks.sort((a, b) => {
         const priorityDiff =
           (priorityValue[a.Priority] ?? 99) - (priorityValue[b.Priority] ?? 99);
@@ -51,7 +51,7 @@ export const sortTasks = ({
       });
       break;
 
-    case "priorityDesc":
+    case "priorityAsc":
       sortedTasks.sort((a, b) => {
         const priorityDiff =
           (priorityValue[b.Priority] ?? 99) - (priorityValue[a.Priority] ?? 99);
