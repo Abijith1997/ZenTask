@@ -1,18 +1,11 @@
-import { Task } from "@/Interface/Types";
+import { getAndSetTasksProps, Task } from "@/Interface/Types";
 import { supabase } from "@/supabaseClient";
-import { User } from "@supabase/supabase-js";
-
-interface props {
-  user: User;
-  setCompletedTasks: (value: Task[]) => void;
-  setIncompleteTasks: (value: Task[]) => void;
-}
 
 export const getAndSetTasks = ({
   user,
   setCompletedTasks,
   setIncompleteTasks,
-}: props) => {
+}: getAndSetTasksProps) => {
   const getTasks = async () => {
     const { data, error } = await supabase
       .from("Todo")

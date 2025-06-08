@@ -3,7 +3,6 @@
 import * as React from "react";
 import { IconClock as CalendarIcon } from "@tabler/icons-react";
 import { format } from "date-fns";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -13,12 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
-interface DateTimeProps {
-  setSelectedTime: (value: string) => void;
-  selectedTime?: string | null;
-  dateRef?: React.RefObject<HTMLDivElement | null>;
-}
+import { DateTimeProps } from "@/Interface/Types";
 
 export const DateTimePicker = ({
   setSelectedTime,

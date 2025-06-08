@@ -1,7 +1,4 @@
-interface handleNavigationProps {
-  page: string;
-  setCurrentPage: (value: string) => void;
-}
+import { handleNavigationProps } from "@/Interface/Types";
 
 export const handleNavigation = ({
   page,

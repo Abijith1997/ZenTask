@@ -1,10 +1,10 @@
-interface Props {
-  setClicked: (clicked: boolean) => void;
-  setSelectedItem: (item: string) => void;
-  event: React.MouseEvent<HTMLButtonElement>;
-}
+import { handleNewProps } from "@/Interface/Types";
 
-export const handleNew = ({ setClicked, event, setSelectedItem }: Props) => {
+export const handleNew = ({
+  setClicked,
+  event,
+  setSelectedItem,
+}: handleNewProps) => {
   setClicked(true);
   const targetClassList = event.currentTarget.classList; // Get the clicked button's class
 

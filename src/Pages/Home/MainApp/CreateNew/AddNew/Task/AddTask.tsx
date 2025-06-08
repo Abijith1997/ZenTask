@@ -13,20 +13,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "./Functions/DateTime";
-import { Task } from "@/Interface/Types";
+import { AddTaskProps, Task } from "@/Interface/Types";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { TagSelector } from "./Functions/TagSelector";
 import { PrioritySelector } from "./Functions/PrioritySelector";
-
-interface AddTaskProps {
-  clicked: boolean;
-  setClicked: (clicked: boolean) => void;
-  dateRef?: React.RefObject<HTMLDivElement | null>;
-  selectingDate: boolean;
-  setSelectingDate: (value: boolean) => void;
-  ddmRef?: React.RefObject<HTMLDivElement | null>;
-  task?: Task;
-}
 
 export const AddTask = ({
   clicked,
@@ -101,7 +91,7 @@ export const AddTask = ({
           Due: formattedTime || null,
           Gemini_ID: null,
           Tags: tags,
-          Priority: Priority,
+          Priority: Priority === "Priority" ? "None" : Priority,
         };
 
         dispatch(insertTasks(newTask));

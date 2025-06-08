@@ -1,10 +1,6 @@
-import { Note } from "@/Interface/Types";
+import { NoteListProps } from "@/Interface/Types";
 import { DisplayNotes } from "./DisplayNotes";
 import React from "react";
-
-interface NoteListProps {
-  localNotes: Note[];
-}
 
 export const NoteList = ({ localNotes }: NoteListProps) => {
   return (

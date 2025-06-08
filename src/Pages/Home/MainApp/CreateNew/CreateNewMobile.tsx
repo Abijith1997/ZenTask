@@ -1,14 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { handleNew } from "./AddNew/Functions";
-import { Note } from "@/Interface/Types";
-
-interface CreateNewMobileProps {
-  setSelectedItem: (item: string | null) => void;
-  setClicked: (clicked: boolean) => void;
-  clicked: boolean;
-  selectedItem: string | null;
-  note?: Note;
-}
+import { CreateNewMobileProps } from "@/Interface/Types";
 
 export const CreateNewMobile = ({
   setSelectedItem,

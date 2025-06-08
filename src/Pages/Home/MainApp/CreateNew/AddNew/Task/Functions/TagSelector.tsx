@@ -1,9 +1,5 @@
+import { TagProps } from "@/Interface/Types";
 import { cn } from "@/lib/utils";
-
-interface TagProps {
-  tags: string[];
-  setTags: (value: string[]) => void;
-}
 
 export const TagSelector = ({ tags, setTags }: TagProps) => {
   const addTag = (e: React.MouseEvent<HTMLButtonElement>) => {

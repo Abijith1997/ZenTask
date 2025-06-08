@@ -1,17 +1,5 @@
-import { Task } from "@/Interface/Types";
+import { HomeViewProps } from "@/Interface/Types";
 import { TaskList } from "@/Pages/Display/Task/TaskList";
-import { User } from "@supabase/supabase-js";
-import { useEffect } from "react";
-
-interface HomeViewProps {
-  user: User;
-  clicked: boolean;
-  setClicked: (value: boolean) => void;
-  setSelectedItem: (value: string | null) => void;
-  setSelectedTask: (value: Task | undefined) => void;
-  filterCategory: string;
-  filterActive: boolean;
-}
 
 export const HomeView = ({
   user,
@@ -22,10 +10,6 @@ export const HomeView = ({
   filterActive,
   filterCategory,
 }: HomeViewProps) => {
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <div className="home-view flex gap-6 flex-col items-center justify-start p-6 h-full w-full  backdrop-blur-sm rounded-xl shadow-lg border border-white/20">
       <h1 className="home-title text-left font-extrabold tracking-wide uppercase w-full px-6 text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 drop-shadow-sm">

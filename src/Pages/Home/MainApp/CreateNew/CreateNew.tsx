@@ -1,13 +1,7 @@
 import { IconNote, IconSquarePlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { handleNew } from "./AddNew/Functions";
-
-interface CreateNewProps {
-  setSelectedItem: (item: string | null) => void;
-  setClicked: (clicked: boolean) => void;
-  clicked: boolean;
-  selectedItem: string | null;
-}
+import { CreateNewProps } from "@/Interface/Types";
 
 export const CreateNew = ({ setSelectedItem, setClicked }: CreateNewProps) => {
   return (

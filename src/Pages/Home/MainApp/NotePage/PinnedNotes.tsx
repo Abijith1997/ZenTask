@@ -1,10 +1,6 @@
-import { Note } from "@/Interface/Types";
+import { pinnedNotesProps } from "@/Interface/Types";
 import { DisplayNotes } from "@/Pages/Display/Note/DisplayNotes";
 import { IconPinFilled } from "@tabler/icons-react";
-
-interface pinnedNotesProps {
-  pinnedNotes: Note[];
-}
 
 export const PinnedNotes = ({ pinnedNotes }: pinnedNotesProps) => {
   return (

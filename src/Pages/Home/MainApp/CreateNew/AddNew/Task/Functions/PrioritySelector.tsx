@@ -6,12 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-interface PrioritySelectorProps {
-  Priority: string;
-  setPriority: (priority: string) => void;
-  priorityBg: string;
-}
+import { PrioritySelectorProps } from "@/Interface/Types";
 
 export const PrioritySelector = ({
   Priority,

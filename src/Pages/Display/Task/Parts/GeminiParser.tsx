@@ -1,8 +1,5 @@
+import { GeminiHTMLViewerProps } from "@/Interface/Types";
 import { useEffect, useState } from "react";
-
-interface GeminiHTMLViewerProps {
-  url: string | null;
-}
 
 export const GeminiHTMLViewer = ({ url }: GeminiHTMLViewerProps) => {
   const [htmlContent, setHtmlContent] = useState<string>("");

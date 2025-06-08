@@ -1,21 +1,13 @@
-import { Task } from "@/Interface/Types";
+import { MainAppProps, Task } from "@/Interface/Types";
 // import { Gemini } from "./HomeView/Gemini/Gemini";
 import { HomeView } from "./HomeView/HomeView";
 import { CreateNew } from "./CreateNew/CreateNew";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CreateNewMobile } from "./CreateNew/CreateNewMobile";
 import { FloatingContainer } from "./CreateNew/Floating";
 import { cn } from "@/lib/utils";
-import { User } from "@supabase/supabase-js";
-
-interface MainAppProps {
-  homeTasks: Task[];
-  user: User;
-  filterActive: boolean;
-  filterCategory: string;
-}
 
 export const MainApp = ({
   // homeTasks,
@@ -27,10 +19,6 @@ export const MainApp = ({
   const [clicked, setClicked] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
-
-  useEffect(() => {
-    console.log(selectedTask);
-  }, [selectedTask]);
 
   return (
     <div
@@ -91,6 +79,7 @@ export const MainApp = ({
           <div className="for-floating z-[1000] fixed top-0 left-0 w-screen h-full flex items-center justify-center backdrop-blur-sm">
             <FloatingContainer
               clicked={clicked}
+              setSelectedTask={setSelectedTask}
               setClicked={setClicked}
               selectedItem={selectedItem}
               selectedTask={selectedTask}

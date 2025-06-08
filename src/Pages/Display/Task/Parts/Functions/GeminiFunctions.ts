@@ -1,16 +1,7 @@
-import { Task } from "@/Interface/Types";
+import { handleGeminiSaveProps, invokeGeminiProps } from "@/Interface/Types";
 import { updateTaskInDB } from "@/Slices/TodoSlice";
 import { supabase } from "@/supabaseClient";
 import { GoogleGenAI } from "@google/genai";
-
-interface GeminiProps {
-  setGenerateNew: (value: boolean) => void;
-  setLoading: (value: boolean) => void;
-  e: React.MouseEvent<HTMLDivElement>;
-  task: Task;
-  setResponse: (value: string) => void;
-  response: string;
-}
 
 export const invokeGemini = async ({
   setGenerateNew,
@@ -19,7 +10,7 @@ export const invokeGemini = async ({
   setLoading,
   e,
   task,
-}: GeminiProps) => {
+}: invokeGeminiProps) => {
   const VITE_GEMINI_API_KEY: string = import.meta.env.VITE_GEMINI_API_KEY!;
   const ai = new GoogleGenAI({
     apiKey: VITE_GEMINI_API_KEY,
@@ -75,12 +66,6 @@ When referencing time, convert it to my **local timezone**, and phrase it in a h
     console.log("response", response);
   }
 };
-
-interface handleGeminiSaveProps {
-  response: string;
-  dispatch: any;
-  task: Task;
-}
 
 export const handleGeminiSave = async ({
   response,

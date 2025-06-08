@@ -14,7 +14,7 @@ import { Profile } from "../Profile/Profile";
 export const Home = ({ user }: { user: User }) => {
   const [currentPage, setCurrentPage] = useState<string>("Main");
   const [filterActive, isFilterActive] = useState<boolean>(false);
-  const [filterCategory, setFilterCategory] = useState<string>("");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const [homeTasks, setHomeTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

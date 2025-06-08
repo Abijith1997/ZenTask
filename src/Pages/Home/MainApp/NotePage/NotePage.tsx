@@ -2,16 +2,11 @@ import { InstantNote } from "@/Pages/Display/Note/InstantNote";
 import { NoteList } from "@/Pages/Display/Note/NoteList";
 import { setNotes } from "@/Slices/NoteSlice";
 import { supabase } from "@/supabaseClient";
-import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PinnedNotes } from "./PinnedNotes";
-import { Note } from "@/Interface/Types";
+import { Note, NotePageProps } from "@/Interface/Types";
 import { RootState } from "@/Store";
-
-interface NotePageProps {
-  user: User;
-}
 
 export const NotePage = ({ user }: NotePageProps) => {
   const [localNotes, setLocalNotes] = useState<Note[]>([]);

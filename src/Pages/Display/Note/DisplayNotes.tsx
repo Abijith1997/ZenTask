@@ -8,18 +8,12 @@ import {
 import DOMPurify from "dompurify";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Note } from "@/Interface/Types";
 import { deleteNoteFunction, pinNoteFunction } from "./NoteFunctions";
 import { FloatingContainer } from "@/Pages/Home/MainApp/CreateNew/Floating";
 import { cn } from "@/lib/utils";
 import { updateNoteInDB } from "@/Slices/NoteSlice";
 import { AppDispatch } from "@/Store";
-
-interface DisplayNote {
-  note: Note;
-  content: string;
-  image?: string | null;
-}
+import { DisplayNote } from "@/Interface/Types";
 
 export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
   const dispatch = useDispatch<AppDispatch>();

@@ -1,8 +1,7 @@
-import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { DisplayTasks } from "./DisplayTasks";
 import { IconCaretDown } from "@tabler/icons-react";
-import { Task } from "@/Interface/Types";
+import { Task, TaskListProps } from "@/Interface/Types";
 import {
   Accordion,
   AccordionContent,
@@ -12,16 +11,8 @@ import {
 import { getAndSetTasks } from "./GetAndSetTasks";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Store";
-
-interface TaskListProps {
-  user: User;
-  clicked: boolean;
-  setClicked: (value: boolean) => void;
-  setSelectedItem: (value: string | null) => void;
-  setSelectedTask: (value: Task | undefined) => void;
-  filterCategory: string;
-  filterActive: boolean;
-}
+import { SortTasks } from "./Parts/SortTasks";
+import { sortTasks } from "./Parts/Functions/SortTasksFunction";
 
 export const TaskList = ({
   user,
@@ -33,31 +24,12 @@ export const TaskList = ({
   filterActive,
 }: TaskListProps) => {
   const tasks = useSelector((state: RootState) => state.todo.tasks);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
-
-  useEffect(() => {
-    setFilteredTasks(tasks);
-  }, [tasks]);
-
-  useEffect(() => {
-    console.log(filterCategory, "From Slice");
-    const afterFilter = tasks.filter((task) =>
-      Object.values(task.Tags || {}).includes(filterCategory)
-    );
-    console.log(afterFilter);
-    setFilteredTasks(afterFilter);
-
-    const match = filteredTasks.some((task) =>
-      Object.values(task.Tags || {}).includes(filterCategory)
-    );
-
-    console.log("Does any task match the filter category?", match);
-    console.log(filterActive, "Filter Active State");
-  }, [filterActive, filterCategory]);
-
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+  const [incompletedToDisplay, setIncompletedToDisplay] = useState<Task[]>([]);
+  const [completedToDisplay, setCompletedToDisplay] = useState<Task[]>([]);
   const [incompletedTasks, setIncompleteTasks] = useState<Task[]>([]);
   const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+  const [sortCriterion, setSortCriterion] = useState<string>("priorityDesc");
 
   useEffect(() => {
     getAndSetTasks({
@@ -67,35 +39,53 @@ export const TaskList = ({
     });
   }, [user, tasks]);
 
+  useEffect(() => {
+    setIncompletedToDisplay(incompletedTasks);
+    setCompletedToDisplay(completedTasks);
+  }, [incompletedTasks, completedTasks]);
+
   const handleSetChecked = (id: string, value: boolean) => {
     setCheckedMap((prev) => ({ ...prev, [id]: value }));
   };
 
+  useEffect(() => {
+    if (!filterActive || filterCategory === "all") {
+      setIncompletedToDisplay(incompletedTasks);
+      return;
+    }
+    const incompletedAfterFilter = incompletedTasks.filter((task) =>
+      Object.values(task.Tags || {}).includes(filterCategory)
+    );
+    setIncompletedToDisplay(incompletedAfterFilter);
+  }, [filterCategory]);
+
+  useEffect(() => {
+    sortTasks({
+      tasks: incompletedToDisplay,
+      setTasksToDisplay: setIncompletedToDisplay,
+      sortCriterion,
+    });
+  }, [sortCriterion, incompletedToDisplay]);
+
+  useEffect(() => {
+    sortTasks({
+      tasks: completedToDisplay,
+      setTasksToDisplay: setCompletedToDisplay,
+      sortCriterion,
+    });
+  }, [sortCriterion, completedToDisplay]);
+
   return (
-    <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center">
+    <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center z-10">
+      <div className="sort-ddm align-center items-end justify-end w-full flex">
+        <SortTasks
+          setSortCriterion={setSortCriterion}
+          sortCriterion={sortCriterion}
+        />
+      </div>
       <div className="whole-task-list w-full  flex flex-col gap-2 items-center justify-center">
-        {filterActive ? (
-          filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => (
-              <DisplayTasks
-                clicked={clicked}
-                setClicked={setClicked}
-                key={task.id}
-                task={task}
-                checked={checkedMap[task.id] || false}
-                setChecked={(value: boolean) =>
-                  handleSetChecked(task.id, value)
-                }
-                setSelectedItem={setSelectedItem}
-                setSelectedTask={setSelectedTask}
-              />
-            ))
-          ) : (
-            <li>No tasks found with the selected Tag</li>
-          )
-        ) : null}
-        {!filterActive && incompletedTasks.length > 0 ? (
-          incompletedTasks.map((task) => (
+        {incompletedToDisplay.length > 0 &&
+          incompletedToDisplay.map((task) => (
             <DisplayTasks
               clicked={clicked}
               setClicked={setClicked}
@@ -106,10 +96,8 @@ export const TaskList = ({
               setSelectedItem={setSelectedItem}
               setSelectedTask={setSelectedTask}
             />
-          ))
-        ) : (
-          <li>No tasks found</li>
-        )}
+          ))}
+        !!!!!!!!!!!!!!!!!
       </div>
       <Accordion type="single" collapsible asChild>
         <AccordionItem
@@ -135,8 +123,8 @@ export const TaskList = ({
           </AccordionTrigger>
           <AccordionContent className="complete-tasks w-full flex flex-col gap-2 items-center justify-center overflow-hidden transition-all duration-500 ease-in-out">
             <div className="whole-task-list w-full flex flex-col gap-2 items-center justify-center">
-              {completedTasks.length > 0 ? (
-                completedTasks.map((task) => (
+              {completedToDisplay.length > 0 ? (
+                completedToDisplay.map((task) => (
                   <DisplayTasks
                     clicked={clicked}
                     setClicked={setClicked}

@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { GoogleGenAI } from "@google/genai";
-import { Task } from "@/Interface/Types";
+import { GeminiProps } from "@/Interface/Types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconSend } from "@tabler/icons-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-interface GeminiProps {
-  homeTasks: Task[];
-}
 
 export const Gemini = ({ homeTasks }: GeminiProps) => {
   const [question, setQuestion] = useState<string>("");

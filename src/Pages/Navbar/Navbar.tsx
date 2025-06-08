@@ -1,5 +1,4 @@
 import { supabase } from "@/supabaseClient";
-import { User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import {
@@ -28,11 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import { handleNavigation } from "../Functions/Functions";
 import { useState } from "react";
-
-interface NavbarProps {
-  user: User | null;
-  setCurrentPage: (value: string) => void;
-}
+import { NavbarProps } from "@/Interface/Types";
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const svgColor = "#1c1d16";

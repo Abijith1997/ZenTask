@@ -14,13 +14,7 @@ import { formSchema } from "./formSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
-interface SignUpFormValues {
-  email: string;
-  password: string;
-  displayName: string;
-  confirmPassword: string;
-}
+import { SignUpFormValues } from "@/Interface/Types";
 
 interface Props {
   isSignUpActive: boolean;

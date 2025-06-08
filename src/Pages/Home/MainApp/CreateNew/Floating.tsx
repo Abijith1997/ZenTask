@@ -1,23 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { IconX } from "@tabler/icons-react";
-import { Note, Task } from "@/Interface/Types";
+import { FloatingContainerProps } from "@/Interface/Types";
 import { AddTask } from "./AddNew/Task/AddTask";
 import { AddNote } from "./AddNew/Note/AddNote";
 import { cn } from "@/lib/utils";
-
-interface FloatingContainerProps {
-  clicked: boolean; // Function to notify the parent that task was added
-  setClicked: (clicked: boolean) => void;
-  selectedItem: string | null;
-  note?: Note;
-  content?: string;
-  selectedTask?: Task;
-}
 
 export const FloatingContainer = ({
   clicked,
   setClicked,
   selectedItem,
+  setSelectedTask,
   note,
   content,
   selectedTask,
@@ -110,7 +102,12 @@ export const FloatingContainer = ({
             ref={floatref}
           >
             <button
-              onClick={() => setClicked(false)}
+              onClick={() => {
+                if (setSelectedTask) {
+                  setSelectedTask(undefined);
+                }
+                setClicked(false);
+              }}
               className="close-button absolute top-5 right-5 close-button border-none cursor-pointer !rounded-full transition-colors duration-300 hover:bg-accent h-10 w-10 flex items-center justify-center !p-1"
             >
               <IconX size={20} />

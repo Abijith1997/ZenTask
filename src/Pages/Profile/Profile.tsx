@@ -1,11 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { ProfilePageProps } from "@/Interface/Types";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { User } from "@supabase/supabase-js";
 import { IconPencil } from "@tabler/icons-react";
-
-interface ProfilePageProps {
-  user: User;
-}
 
 export const Profile = ({ user }: ProfilePageProps) => {
   const handleEdit = () => {};

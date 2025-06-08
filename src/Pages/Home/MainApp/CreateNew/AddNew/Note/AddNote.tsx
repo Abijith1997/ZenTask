@@ -7,7 +7,7 @@ import {
 } from "@tabler/icons-react";
 import { User } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
-import { Note } from "@/Interface/Types";
+import { AddNoteProps, Note } from "@/Interface/Types";
 import { AppDispatch } from "@/Store";
 import { supabase } from "@/supabaseClient";
 import { insertNoteInDB, updateNoteInDB } from "@/Slices/NoteSlice";
@@ -15,14 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-interface AddNoteProps {
-  clicked: boolean; // Function to notify the parent that task was added
-  setClicked: (clicked: boolean) => void;
-  note?: Note;
-  content?: string;
-  setColor: (color: string) => void;
-}
 
 export const AddNote = ({
   clicked,

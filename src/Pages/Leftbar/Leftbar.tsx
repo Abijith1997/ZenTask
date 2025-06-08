@@ -11,21 +11,7 @@ import { IconCaretDown, IconHome, IconNotes } from "@tabler/icons-react";
 import { handleNavigation } from "../Functions/Functions";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
-
-interface LeftBarProps {
-  setCurrentPage: (value: string) => void;
-  isFilterActive: (value: boolean) => void;
-  setFilterCategory: (value: string) => void;
-  filterActive: boolean;
-  filterCategory: string;
-  currentPage: string;
-}
-
-type CategoryType = {
-  id: string;
-  name: string;
-  background: string;
-};
+import { CategoryType, LeftBarProps } from "@/Interface/Types";
 
 export const LeftBar = ({
   setCurrentPage,
@@ -72,8 +58,8 @@ export const LeftBar = ({
     const create = document.querySelector(".create-new-container");
     const gemini = document.querySelector(".whole-gemini");
     const addClass = () => {
-      create?.classList.add("sm:hidden");
-      gemini?.classList.add("hidden");
+      create?.classList.toggle("sm:hidden");
+      gemini?.classList.toggle("hidden");
     };
     if (currentPage !== "Main" && isCollapsed) {
       setCurrentPage("Main");
@@ -87,10 +73,12 @@ export const LeftBar = ({
     if (category === "all") {
       isFilterActive(false);
       setFilterCategory("all");
+      setCurrentPage("Main");
       return;
     }
     if (category === filterCategory && filterActive) {
       isFilterActive(!filterActive);
+      setFilterCategory("all");
       return;
     } else if (filterActive && category !== filterCategory) {
       setFilterCategory(category);

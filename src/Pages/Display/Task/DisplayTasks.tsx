@@ -87,67 +87,6 @@ export const DisplayTasks = ({
     };
   }, []);
 
-  // useEffect(() => {
-  //   function handleClickOutside(event: MouseEvent) {
-  //     if (
-  //       editorRef.current &&
-  //       !editorRef.current.contains(event.target as Node)
-  //     ) {
-  //       handleSave({
-  //         selectedTime,
-  //         dispatch,
-  //         task,
-  //         editTitle,
-  //         editDescription,
-  //         setIsEditing,
-  //         tags,
-  //         Priority,
-  //       });
-  //     }
-  //   }
-
-  //   function handleEscapeKey(event: KeyboardEvent) {
-  //     if (event.key === "Escape") {
-  //       handleSave({
-  //         selectedTime,
-  //         dispatch,
-  //         task,
-  //         editTitle,
-  //         editDescription,
-  //         setIsEditing,
-  //         tags,
-  //         Priority,
-  //       });
-  //     }
-  //   }
-
-  //   if (isEditing) {
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //     document.addEventListener("keydown", handleEscapeKey);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //     document.removeEventListener("keydown", handleEscapeKey);
-  //   };
-  // }, [isEditing, editTitle, editDescription, selectedTime]);
-
-  // const handleKeyDown = (e: React.KeyboardEvent) => {
-  //   if (e.key === "Enter")
-  //     handleSave({
-  //       selectedTime,
-  //       dispatch,
-  //       task,
-  //       editTitle,
-  //       editDescription,
-  //       setIsEditing,
-  //       tags,
-  //       Priority,
-  //     });
-  // };
-
-  //
-
   const handleEdit = () => {
     setSelectedItem("newTask");
     setClicked(!clicked);
@@ -171,19 +110,6 @@ export const DisplayTasks = ({
       task,
     });
   };
-
-  // const callHandleSave = () => {
-  //   handleSave({
-  //     selectedTime,
-  //     dispatch,
-  //     task,
-  //     editTitle,
-  //     editDescription,
-  //     setIsEditing,
-  //     tags,
-  //     Priority,
-  //   });
-  // };
 
   const handleDelete = () => {
     deleteTask(task.id, dispatch);

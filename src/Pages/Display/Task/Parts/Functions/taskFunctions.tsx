@@ -1,4 +1,8 @@
-import { dueColorProps, handleCheckProps } from "@/Interface/Types";
+import {
+  dueColorProps,
+  handleCheckProps,
+  handleSaveProps,
+} from "@/Interface/Types";
 import {
   deleteTaskInDB,
   updateTaskInDB,
@@ -30,17 +34,6 @@ export const getDueColor = ({ minutesUntilDue, checked }: dueColorProps) => {
     return "green"; // More than a day left
   }
 };
-
-interface handleSaveProps {
-  selectedTime: string;
-  dispatch: any;
-  task: any;
-  editTitle: string;
-  editDescription: string;
-  setIsEditing: (value: boolean) => void;
-  tags?: string[];
-  Priority: string;
-}
 
 export const handleSave = async ({
   selectedTime,
