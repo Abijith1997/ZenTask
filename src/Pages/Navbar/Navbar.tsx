@@ -16,6 +16,7 @@ import {
   IconLogout,
   IconMenu2,
   IconNotes,
+  IconSearch,
   IconUser,
 } from "@tabler/icons-react";
 import {
@@ -28,6 +29,7 @@ import {
 import { handleNavigation } from "../Functions/Functions";
 import { useState } from "react";
 import { NavbarProps } from "@/Interface/Types";
+import { Input } from "@/components/ui/input";
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const svgColor = "#1c1d16";
@@ -60,6 +62,19 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
     <>
       <div className="top-navbar bg-sidebar flex flex-row justify-end items-center h-[4rem] text-amber-50 w-full z-50 sticky border-b-2 border-border">
         <div className="sm:flex justify-center items-center pr-[0.5rem] hidden">
+          <IconSearch
+            color="black"
+            className="hover:scale-110 transition-all duration-300 ease-in-out"
+            onClick={() => {
+              document
+                .querySelector(".search-input")
+                ?.classList.toggle("hidden");
+            }}
+          />
+          <Input
+            className="search-input hidden w-[20rem] h-8 bg-secondary text-primary placeholder:text-primary placeholder:opacity-70 focus:outline-none focus:ring-2 focus:ring-primary rounded-md m-auto"
+            placeholder="Search..."
+          />
           <div className="theme-container mr-[0.5rem] rounded-full">
             <ThemeToggle />
           </div>

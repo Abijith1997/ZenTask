@@ -117,7 +117,7 @@ export const DisplayTasks = ({
 
   return (
     <div
-      className="outer-display-task w-full flex items-center justify-center sm:p-4 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
+      className="outer-display-task w-full flex items-center justify-center sm:p-2 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
       ref={outerRef}
     >
       <div
@@ -206,7 +206,7 @@ export const DisplayTasks = ({
                   tabIndex={0}
                 >
                   <span
-                    className="done-toggle-display rounded-full border border-[var(--mantine-primary-4)] flex items-center justify-center mr-2 ml-2 p-[1px]"
+                    className="done-toggle-display rounded-sm border border-black flex items-center justify-center mr-2 ml-2 p-[1px]"
                     onClick={() => callHandleCheck()}
                   >
                     <IconCheck

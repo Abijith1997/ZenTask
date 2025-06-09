@@ -73,7 +73,7 @@ export const TaskList = ({
       setTasksToDisplay: setCompletedToDisplay,
       sortCriterion,
     });
-  }, [sortCriterion, completedToDisplay]);
+  }, [sortCriterion, completedToDisplay, tasks]);
 
   return (
     <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center z-10">

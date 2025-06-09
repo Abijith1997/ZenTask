@@ -20,7 +20,7 @@ export const SortTasks = ({
       setDisplaySort("Sort By");
     } else if (sortCriterion === "dateAsc") {
       setDisplaySort("Date Ascending");
-    } else if (sortCriterion === "dateesc") {
+    } else if (sortCriterion === "dateDesc") {
       setDisplaySort("Date Descending");
     } else if (sortCriterion === "priorityAsc") {
       setDisplaySort("Priority Ascending");
