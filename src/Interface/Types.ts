@@ -108,7 +108,6 @@ export interface FloatingContainerProps {
   setClicked: (clicked: boolean) => void;
   selectedItem: string | null;
   note?: Note;
-  content?: string;
   selectedTask?: Task;
   setSelectedTask?: (task: Task | undefined) => void;
 }

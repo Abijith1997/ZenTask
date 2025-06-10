@@ -11,7 +11,6 @@ export const FloatingContainer = ({
   selectedItem,
   setSelectedTask,
   note,
-  content,
   selectedTask,
 }: FloatingContainerProps) => {
   const floatref = useRef<HTMLDivElement | null>(null);
@@ -81,7 +80,6 @@ export const FloatingContainer = ({
             note={note}
             clicked={clicked}
             setClicked={setClicked}
-            content={content}
             setColor={setColor}
           />
         );

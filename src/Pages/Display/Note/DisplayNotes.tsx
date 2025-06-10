@@ -244,7 +244,6 @@ export const DisplayNotes = ({ note, content, image }: DisplayNote) => {
             setClicked={setIsEditing}
             selectedItem={selectedItem}
             note={note}
-            content={content}
           />
         </div>
       )}
