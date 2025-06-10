@@ -9,7 +9,7 @@ export const NoteList = ({ localNotes }: NoteListProps) => {
         <h3 className=" font-bold align-start justify-start mb-4">Notes</h3>
       </div>
 
-      <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
+      <div className="all-notes w-full [column-width:120px] [column-gap:25px] sm:[column-gap:50px] sm:[column-width:250px]">
         {localNotes.length > 0 ? (
           localNotes.map((note) => (
             <React.Fragment key={note.id}>

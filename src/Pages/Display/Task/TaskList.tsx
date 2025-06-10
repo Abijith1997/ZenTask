@@ -77,7 +77,7 @@ export const TaskList = ({
 
   return (
     <div className="task-whole-list  justify-start  flex flex-col gap-0 w-full items-center z-10">
-      <div className="sort-ddm align-center items-end justify-end w-full flex">
+      <div className="sort-ddm align-center items-end justify-end w-full flex mb-5 sm:mb-2">
         <SortTasks
           setSortCriterion={setSortCriterion}
           sortCriterion={sortCriterion}

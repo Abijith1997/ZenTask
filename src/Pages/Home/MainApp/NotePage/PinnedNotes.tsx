@@ -4,12 +4,12 @@ import { IconPinFilled } from "@tabler/icons-react";
 
 export const PinnedNotes = ({ pinnedNotes }: pinnedNotesProps) => {
   return (
-    <div className="items-start justify-start flex w-full flex-col gap-4 note-whole-list p-4 h-auto">
+    <div className="items-start justify-start flex w-full flex-col gap-4 note-whole-list sm:p-4 h-auto">
       <div className="pinned-heading text-xl flex gap-1 items-center">
         <h2 className="font-bold">Pinned</h2>
         <IconPinFilled size={18} />
       </div>
-      <div className="all-notes w-full [column-width:10rem] [column-gap:1.5rem] sm:[column-width:300px] sm:[column-gap:16px]">
+      <div className="all-notes w-full [column-width:120px] [column-gap:25px] sm:[column-gap:50px] sm:[column-width:250px]">
         {pinnedNotes.length > 0 ? (
           pinnedNotes.map((note, index) => (
             <DisplayNotes

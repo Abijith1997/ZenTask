@@ -24,7 +24,7 @@ export const AddNote = ({
 }: AddNoteProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [fontColor, setFontColor] = useState("!text-black");
+  const [fontColor, setFontColor] = useState<string>("text-black");
   const [title, setTitle] = useState<string>(note?.Title ?? "");
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
@@ -32,7 +32,9 @@ export const AddNote = ({
   const [isPinned, setIsPinned] = useState(false);
   const [image, setImage] = useState<File | string | null>(note?.Image || null);
   const bottomToolbar = useRef<HTMLDivElement | null>(null);
-  const [placeholderColor, setplaceholderColor] = useState("text-secondary");
+  const [placeholderColor, setplaceholderColor] = useState(
+    "placeholder:text-secondary"
+  );
   const [dbColor, setDBColor] = useState<string>(note?.color || "");
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +49,6 @@ export const AddNote = ({
       case "red":
         setColor("bg-red-400");
         setplaceholderColor("placeholder:text-gray-800");
-        setFontColor("text-secondary");
         break;
       case "blue":
         setColor("bg-blue-500");
@@ -57,17 +58,14 @@ export const AddNote = ({
       case "green":
         setColor("bg-green-700");
         setplaceholderColor("placeholder:text-gray-800");
-        setFontColor("text-secondary");
         break;
       case "yellow":
         setColor("bg-yellow-300");
         setplaceholderColor("placeholder:text-gray-800");
-        setFontColor("text-secondary");
         break;
       default:
         setColor("bg-white");
         setplaceholderColor("placeholder:text-gray-500");
-        setFontColor("text-secondary");
         break;
     }
   }, [note?.color]);
@@ -153,7 +151,8 @@ export const AddNote = ({
       setImage(null);
       setIsPinned(false);
       setClicked(false);
-      setFontColor("text-secondary");
+      setFontColor("text-blacklack");
+      setplaceholderColor("placeholder:text-secondary");
     } catch (err) {
       console.error("Error saving note:", err);
     }
@@ -221,7 +220,7 @@ export const AddNote = ({
         )}
       >
         <div className="w-full flex justify-center items-start">
-          <h2 className="text-md font-bold underline mb-5">
+          <h2 className="text-md font-bold underline mb-5 text-black">
             {note ? "Edit Note" : " New Note"}
           </h2>
         </div>

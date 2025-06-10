@@ -121,7 +121,7 @@ export const DisplayTasks = ({
       ref={outerRef}
     >
       <div
-        className="relative gemini-svg w-auto h-auto rounded-3xl p-[4px] sm:p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out sm:hover:scale-110 shadow-lg "
+        className="hidden sm:flex relative gemini-svg w-auto h-auto rounded-3xl p-[4px] sm:p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out sm:hover:scale-110 shadow-lg "
         onClick={(e) =>
           invokeGemini({
             e,
@@ -154,7 +154,7 @@ export const DisplayTasks = ({
             <div className="title-description w-full !text-[var(--text-color)] flex flex-col gap-1">
               <h1
                 className={cn(
-                  "task-title break-words uppercase !text-xl font-bold",
+                  "task-title break-words uppercase !text-xs sm:!text-xl font-bold",
                   checked ? "line-through" : ""
                 )}
               >
@@ -187,15 +187,18 @@ export const DisplayTasks = ({
           </div>
           <div className="manipulation-group  flex items-center justify-center flex-col gap-5">
             <div>
-              <div className="delete-task relative flex items-center justify-center ">
+              <div className="delete-task relative flex items-center justify-center gap-0">
                 <button
-                  className="edit-button duration-300 ease-in-out transition-all scale-100"
+                  className="edit-button duration-300 ease-in-out transition-all scale-100 w-10"
                   onClick={() => handleEdit()}
                 >
                   <IconPencil className="edit-icon" size={15} />
                 </button>
 
-                <button className="delete-button " onClick={handleDelete}>
+                <button
+                  className="delete-button w-10 duration-300 ease-in-out transition-all scale-100"
+                  onClick={handleDelete}
+                >
                   <IconTrashFilled className="delete-icon" size={15} />
                 </button>
 
