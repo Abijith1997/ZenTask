@@ -1,24 +1,41 @@
-import { Task } from "@/Interface/Types";
 import { setTasks } from "@/Slices/TodoSlice";
-import { RootState } from "@/Store";
 import { supabase } from "@/supabaseClient";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { LeftBar } from "../Leftbar/Leftbar";
 import { Navbar } from "../Navbar/Navbar";
 import { MainApp } from "./MainApp/MainApp";
 import { NotePage } from "./MainApp/NotePage/NotePage";
 import { Profile } from "../Profile/Profile";
+import { setNotes } from "@/Slices/NoteSlice";
 
 export const Home = ({ user }: { user: User }) => {
   const [currentPage, setCurrentPage] = useState<string>("Main");
   const [filterActive, isFilterActive] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const tasks = useSelector((state: RootState) => state.todo.tasks);
-  const [homeTasks, setHomeTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      console.log("fetching notes");
+      const { data, error } = await supabase
+        .from("Notes")
+        .select()
+        .eq("uuid", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching notes:", error);
+        return;
+      }
+
+      dispatch(setNotes(data));
+    };
+
+    fetchNotes();
+  }, [user]);
 
   useEffect(() => {
     const getTasks = async () => {
@@ -37,49 +54,6 @@ export const Home = ({ user }: { user: User }) => {
 
     getTasks();
   }, [user]);
-
-  useEffect(() => {
-    const getHomeTasks = () => {
-      const oneDay = 24 * 60 * 60 * 1000;
-      const today = new Date();
-      const tomorrow = new Date(today.getTime() + oneDay);
-      const tomorrowTasks = tasks.filter((task: Task) => {
-        if (!task.Due) return false;
-        const taskDate = new Date(task.Due);
-        return (
-          (taskDate.getFullYear() === tomorrow.getFullYear() &&
-            taskDate.getMonth() === tomorrow.getMonth() &&
-            (taskDate.getDate() === tomorrow.getDate() ||
-              taskDate.getDate() === today.getDate())) ||
-          (taskDate < today && !task.completed)
-        );
-      });
-
-      const sortByDueDate = (a: Task, b: Task) => {
-        if (!a.Due) return 1;
-        if (!b.Due) return -1;
-
-        return new Date(a.Due).getTime() - new Date(b.Due).getTime();
-      };
-
-      tomorrowTasks.sort(sortByDueDate);
-
-      const uncheckedTomorrowTasks = tomorrowTasks.filter(
-        (task) => !task.completed
-      );
-
-      const checkedTomorrowTasks = tomorrowTasks.filter(
-        (task) => task.completed
-      );
-
-      const reorderedTomorrowTasks = [
-        ...uncheckedTomorrowTasks,
-        ...checkedTomorrowTasks,
-      ];
-      setHomeTasks(reorderedTomorrowTasks);
-    };
-    getHomeTasks();
-  }, [tasks]);
 
   useEffect(() => {
     const mainApp = document.querySelector(".main-app");
@@ -132,13 +106,12 @@ export const Home = ({ user }: { user: User }) => {
             <div>Loading...</div>
           ) : currentPage === "Main" ? (
             <MainApp
-              homeTasks={homeTasks}
               user={user}
               filterCategory={filterCategory}
               filterActive={filterActive}
             />
           ) : currentPage === "Note" ? (
-            <NotePage user={user} />
+            <NotePage />
           ) : currentPage === "Profile" ? (
             <Profile user={user} />
           ) : null}

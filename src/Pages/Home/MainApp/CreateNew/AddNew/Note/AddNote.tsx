@@ -20,7 +20,6 @@ export const AddNote = ({
   clicked,
   setClicked,
   note,
-  content,
   setColor,
 }: AddNoteProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -29,12 +28,12 @@ export const AddNote = ({
   const [title, setTitle] = useState<string>(note?.Title ?? "");
   const dispatch = useDispatch<AppDispatch>();
   const [changingColor, setChangingColor] = useState(false);
-  const [description, setDescription] = useState<string>(content ?? "");
+  const [description, setDescription] = useState<string>(note?.Content ?? "");
   const [isPinned, setIsPinned] = useState(false);
   const [image, setImage] = useState<File | string | null>(note?.Image || null);
   const bottomToolbar = useRef<HTMLDivElement | null>(null);
   const [placeholderColor, setplaceholderColor] = useState("text-secondary");
-  const [dbColor, setDBColor] = useState<string>("");
+  const [dbColor, setDBColor] = useState<string>(note?.color || "");
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("image upload clicked");
@@ -42,6 +41,36 @@ export const AddNote = ({
       setImage(e.target.files[0]);
     }
   };
+
+  useEffect(() => {
+    switch (dbColor) {
+      case "red":
+        setColor("bg-red-400");
+        setplaceholderColor("placeholder:text-gray-800");
+        setFontColor("text-secondary");
+        break;
+      case "blue":
+        setColor("bg-blue-500");
+        setFontColor("!text-slate-800");
+        setplaceholderColor("placeholder:text-gray-800");
+        break;
+      case "green":
+        setColor("bg-green-700");
+        setplaceholderColor("placeholder:text-gray-800");
+        setFontColor("text-secondary");
+        break;
+      case "yellow":
+        setColor("bg-yellow-300");
+        setplaceholderColor("placeholder:text-gray-800");
+        setFontColor("text-secondary");
+        break;
+      default:
+        setColor("bg-white");
+        setplaceholderColor("placeholder:text-gray-500");
+        setFontColor("text-secondary");
+        break;
+    }
+  }, [note?.color]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -192,7 +221,9 @@ export const AddNote = ({
         )}
       >
         <div className="w-full flex justify-center items-start">
-          <h2 className="text-md font-bold underline mb-5">New Note</h2>
+          <h2 className="text-md font-bold underline mb-5">
+            {note ? "Edit Note" : " New Note"}
+          </h2>
         </div>
 
         {typeof image === "string" && (

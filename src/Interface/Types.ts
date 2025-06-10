@@ -71,7 +71,6 @@ export interface CreateNewMobileProps {
 }
 
 export interface MainAppProps {
-  homeTasks: Task[];
   user: User;
   filterActive: boolean;
   filterCategory: string;
@@ -88,10 +87,6 @@ export interface LeftBarProps {
 
 export interface pinnedNotesProps {
   pinnedNotes: Note[];
-}
-
-export interface NotePageProps {
-  user: User;
 }
 
 export interface GeminiProps {
@@ -157,7 +152,6 @@ export interface AddNoteProps {
   clicked: boolean; // Function to notify the parent that task was added
   setClicked: (clicked: boolean) => void;
   note?: Note;
-  content?: string;
   setColor: (color: string) => void;
 }
 

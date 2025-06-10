@@ -8,16 +8,20 @@ import {
   DropdownMenuTrigger,
   Separator,
 } from "@radix-ui/react-dropdown-menu";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import {
+  IconFilter,
   IconHome,
+  IconList,
   IconListCheck,
   IconLogout,
   IconMenu2,
+  IconNote,
   IconNotes,
   IconSearch,
   IconUser,
+  IconX,
 } from "@tabler/icons-react";
 import {
   Sheet,
@@ -27,15 +31,34 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { handleNavigation } from "../Functions/Functions";
-import { useState } from "react";
-import { NavbarProps } from "@/Interface/Types";
+import { useEffect, useRef, useState } from "react";
+import { NavbarProps, Note, Task } from "@/Interface/Types";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Store";
+import { FloatingContainer } from "../Home/MainApp/CreateNew/Floating";
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
+  const [clicked, setClicked] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const filterOptionsRef = useRef<HTMLDivElement>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const tasks = useSelector((state: RootState) => state.todo.tasks);
+  const notes = useSelector((state: RootState) => state.note.notes);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [searchActive, setSearchActive] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterOpen, setFilterOpen] = useState<boolean>(false);
+  const [onlyNotes, setOnlyNotes] = useState<boolean>(false);
+  const [onlyTasks, setOnlyTasks] = useState<boolean>(false);
+  const [note, setNote] = useState<Note | undefined>(undefined);
   const svgColor = "#1c1d16";
   const [open, setOpen] = useState(false);
   const [openDDM, setOpenDDM] = useState(false);
-  // const [profileOpen, setProfileOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -58,23 +81,271 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
     setOpenDDM(false);
   };
 
+  useEffect(() => {
+    console.log("Notes:", notes);
+  }, [notes]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      console.log("Search query:", searchQuery);
+      const tempTasks = tasks.filter(
+        (task) =>
+          task.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredTasks(tempTasks.length > 0 ? tempTasks : []);
+      console.log(notes);
+      const tempNotes = notes.filter(
+        (note) =>
+          note.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          note.Content?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      console.log("Filtered notes:", tempNotes);
+      setFilteredNotes(tempNotes.length > 0 ? tempNotes : []);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!searchActive) return;
+
+    console.log("Search is active");
+    console.log(searchRef?.current);
+
+    const deactivateSearch = () => {
+      setSearchActive(false);
+      setSearchQuery("");
+      setFilteredTasks([]);
+      setFilteredNotes([]);
+      setSelectedItem(null);
+      setFilterOpen(false);
+      setOnlyNotes(false);
+      setOnlyTasks(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        deactivateSearch();
+      }
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const filterButton = filterRef.current;
+      const filterOptions = filterOptionsRef.current;
+      const isOutsideSearch =
+        searchRef.current &&
+        !searchRef.current.contains(target) &&
+        !filterButton?.contains(target) &&
+        !filterOptions?.contains(target);
+      if (isOutsideSearch) {
+        deactivateSearch();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    setTimeout(() => {
+      document.addEventListener("click", handleClickOutside);
+    }, 300);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [searchActive]);
+
+  const handleFilter = () => {
+    setFilterOpen(!filterOpen);
+  };
+
+  useEffect(() => {
+    if (searchActive) {
+      searchRef.current?.focus();
+    }
+  }, [searchActive]);
+
+  const handleSearchClose = () => {
+    document.querySelector(".search-input")?.classList.toggle("hidden");
+    setSearchActive(!searchActive);
+    setSearchQuery("");
+    setFilteredTasks([]);
+    setFilteredNotes([]);
+    setSelectedItem(null);
+    setFilterOpen(false);
+    setOnlyNotes(false);
+    setOnlyTasks(false);
+  };
+
+  useEffect(() => {
+    onlyNotes && setFilteredTasks([]);
+    onlyTasks && setFilteredNotes([]);
+  }, [onlyNotes, onlyTasks]);
+
   return (
     <>
+      <FloatingContainer
+        clicked={clicked}
+        setSelectedTask={setSelectedTask}
+        setClicked={setClicked}
+        selectedItem={selectedItem}
+        selectedTask={selectedTask}
+        note={note}
+      />
       <div className="top-navbar bg-sidebar flex flex-row justify-end items-center h-[4rem] text-amber-50 w-full z-50 sticky border-b-2 border-border">
         <div className="sm:flex justify-center items-center pr-[0.5rem] hidden">
-          <IconSearch
-            color="black"
-            className="hover:scale-110 transition-all duration-300 ease-in-out"
-            onClick={() => {
-              document
-                .querySelector(".search-input")
-                ?.classList.toggle("hidden");
-            }}
-          />
-          <Input
-            className="search-input hidden w-[20rem] h-8 bg-secondary text-primary placeholder:text-primary placeholder:opacity-70 focus:outline-none focus:ring-2 focus:ring-primary rounded-md m-auto"
-            placeholder="Search..."
-          />
+          <div
+            className={cn(
+              "search-group flex items-center mr-5",
+              searchActive ? "relative bg-red-50" : ""
+            )}
+          >
+            {searchActive ? (
+              <div
+                className=" flex items-center justify-center gap-2 absolute right-3 top-1/2 -translate-y-1/2 z-10 text-black"
+                ref={filterRef}
+              >
+                <IconX
+                  size={16}
+                  color={"#6f6f6f"}
+                  className=" cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
+                  onClick={() => {
+                    handleSearchClose();
+                  }}
+                />
+                {onlyTasks && onlyNotes ? (
+                  <p className="rounded-full bg-gray-400 w-6 h-6 text-xs text-center flex items-center justify-center">
+                    2
+                  </p>
+                ) : onlyTasks || onlyNotes ? (
+                  <p className="rounded-full bg-gray-400 w-6 h-6 text-xs text-center flex items-center justify-center">
+                    1
+                  </p>
+                ) : null}
+                <IconFilter
+                  color="#6f6f6f"
+                  size={16}
+                  className=" cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
+                  onClick={() => handleFilter()}
+                />
+              </div>
+            ) : (
+              <IconSearch
+                color={"black"}
+                size={20}
+                className="hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer"
+                onClick={() => {
+                  document
+                    .querySelector(".search-input")
+                    ?.classList.toggle("hidden");
+                  setSearchActive(!searchActive);
+                }}
+              />
+            )}
+            <Input
+              ref={searchRef}
+              onFocus={() => {
+                setFilterOpen(false);
+              }}
+              id="search-input"
+              className={cn(
+                " absolute -translate-x-[100%] transition-all duration-300 ease-in-out transform mr-5 h-8 bg-background text-primary placeholder:text-primary placeholder:opacity-70 focus:outline-none focus:ring-2 focus:ring-primary rounded-md",
+                searchActive
+                  ? "opacity-100 scale-100 w-[20rem] sm:w-[25rem]"
+                  : "opacity-0 scale-0 hidden"
+              )}
+              placeholder="Search..."
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+            />
+            {filterOpen && (
+              <div
+                ref={filterOptionsRef}
+                className="filter-options flex-col flex gap-2 absolute bottom-0 translate-y-[120%] right-0 w-auto z-100 bg-background rounded-md p-2 shadow-md"
+              >
+                <Button
+                  variant={"ghost"}
+                  className={cn(
+                    "text-black border-1 hover:bg-gray-200 transition-colors duration-300 ease-in-out",
+                    onlyTasks ? "bg-gray-300" : ""
+                  )}
+                  onClick={() => {
+                    setOnlyTasks(!onlyTasks);
+                  }}
+                >
+                  Task
+                </Button>
+                <Button
+                  className={cn(
+                    "text-black border-1 hover:bg-gray-200 transition-colors duration-300 ease-in-out",
+                    onlyNotes ? "bg-gray-300" : ""
+                  )}
+                  variant={"ghost"}
+                  onClick={() => {
+                    setOnlyNotes(!onlyNotes);
+                  }}
+                >
+                  Notes
+                </Button>
+              </div>
+            )}
+            {searchActive && searchQuery && (
+              <div className="filtered absolute top-[2.5rem] right-0 w-[20rem] sm:w-[25rem] z-50 shadow-md bg-background rounded-md p-2 overflow-y-auto max-h-[400px]">
+                {filteredTasks.length > 0 &&
+                  searchQuery &&
+                  filteredTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      onClick={() => {
+                        setSelectedItem("newTask");
+                        setClicked(true);
+                        setSelectedTask(task);
+                        setSearchActive(false);
+                        setSearchQuery("");
+                        setFilteredTasks([]);
+                      }}
+                      className={cn(
+                        "filtered-task-item border-b-1 w-full p-2 flex gap-2 items-center justify-start mb-0.5 cursor-pointer hover:bg-gray-200 transition-colors duration-300 ease-in-out",
+                        task.Priority === "High"
+                          ? "border-l-red-400 border-l-1"
+                          : task.Priority === "Medium"
+                          ? "border-l-orange-400"
+                          : task.Priority === "Low"
+                          ? "border-l-yellow-500"
+                          : null
+                      )}
+                    >
+                      <IconList color="black" size={16} />
+                      <p className="text-primary">{task.Title}</p>
+                    </div>
+                  ))}
+                {filteredNotes.length > 0 &&
+                  searchQuery &&
+                  filteredNotes.map((note) => (
+                    <div
+                      key={note.id}
+                      onClick={() => {
+                        setSelectedItem("newNote");
+                        setClicked(true);
+                        setSearchActive(false);
+                        setNote(note);
+                        setSearchQuery("");
+                        setFilteredNotes([]);
+                        setFilteredTasks([]);
+                      }}
+                      className="filtered-note-item flex gap-2 items-center justify-start border-b-1 w-full p-2 mb-0.5 cursor-pointer hover:bg-gray-200 transition-colors duration-300 ease-in-out"
+                    >
+                      <IconNote color="black" size={16} />
+                      <p className="text-primary">{note.Title}</p>
+                    </div>
+                  ))}
+                {filteredTasks.length === 0 && filteredNotes.length === 0 && (
+                  <div className="no-results text-center text-gray-500 p-2">
+                    No results found.
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="theme-container mr-[0.5rem] rounded-full">
             <ThemeToggle />
           </div>
@@ -83,10 +354,21 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
               <DropdownMenuTrigger asChild>
                 <div className="user-ddm cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 w-[2.2rem] rounded-full">
                   <Avatar>
-                    <AvatarImage
-                      className="rounded-full object-cover w-full h-full"
-                      src={user?.user_metadata?.avatar_url}
-                    />
+                    {user?.user_metadata?.avatar_url ? (
+                      <>
+                        <AvatarImage
+                          className="rounded-full object-cover w-full h-full"
+                          src="https://github.com/evilrabbit.png"
+                          alt="@evilrabbit"
+                        />
+                        <AvatarFallback>ER</AvatarFallback>
+                      </>
+                    ) : (
+                      <AvatarImage
+                        className="rounded-full object-cover w-full h-full"
+                        src={user?.user_metadata?.avatar_url}
+                      />
+                    )}
                   </Avatar>
                 </div>
               </DropdownMenuTrigger>

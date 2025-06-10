@@ -1,5 +1,4 @@
 import { MainAppProps, Task } from "@/Interface/Types";
-// import { Gemini } from "./HomeView/Gemini/Gemini";
 import { HomeView } from "./HomeView/HomeView";
 import { CreateNew } from "./CreateNew/CreateNew";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,6 @@ import { FloatingContainer } from "./CreateNew/Floating";
 import { cn } from "@/lib/utils";
 
 export const MainApp = ({
-  // homeTasks,
   user,
   filterActive,
   filterCategory,
@@ -29,8 +27,6 @@ export const MainApp = ({
     "
     >
       <div className="in-main-app flex flex-col  items-center justify-start min-w-full box-border flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden scrollbar-hide">
-        {/* <Gemini homeTasks={homeTasks} /> */}
-
         <div className="hidden create-new-container sm:flex items-center justify-start gap-5 w-full sm:pl-2 pl-10 relative">
           <CreateNew
             setClicked={setClicked}
