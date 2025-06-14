@@ -13,6 +13,17 @@ export interface Task {
   Priority: string;
 }
 
+export interface userData {
+  id: `${string}-${string}-${string}-${string}-${string}`;
+  email: string | undefined;
+  Phone: string;
+  created_at: string;
+  F_Name: string;
+  L_Name: string;
+  Display_name: string;
+  profile_pic: string | null;
+}
+
 export type CategoryType = {
   id: string;
   name: string;
@@ -27,7 +38,9 @@ export interface SignUpFormValues {
 }
 
 export interface ProfilePageProps {
-  user: User;
+  user: User | null;
+  profileOpened: boolean;
+  setProfileOpened: (value: boolean) => void;
 }
 
 export interface NavbarProps {
@@ -110,6 +123,7 @@ export interface FloatingContainerProps {
   note?: Note;
   selectedTask?: Task;
   setSelectedTask?: (task: Task | undefined) => void;
+  user?: User;
 }
 
 export interface CreateNewProps {

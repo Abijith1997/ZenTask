@@ -10,12 +10,12 @@ import {
   getDueColor,
   handleCheck,
 } from "./Parts/Functions/taskFunctions";
-import { GeminiSVG } from "@/SVG/SVGs";
-import { GeminiHTMLViewer } from "./Parts/GeminiParser";
-import {
-  handleGeminiSave,
-  invokeGemini,
-} from "./Parts/Functions/GeminiFunctions";
+// import { GeminiSVG } from "@/SVG/SVGs";
+// import { GeminiHTMLViewer } from "./Parts/GeminiParser";
+// import {
+//   handleGeminiSave,
+//   // invokeGemini,
+// } from "./Parts/Functions/GeminiFunctions";
 import { TagRenderer } from "./Parts/TagRenderer";
 
 export const DisplayTasks = ({
@@ -42,11 +42,11 @@ export const DisplayTasks = ({
   const tasks = useSelector((state: RootState) => state.todo.tasks);
   const innerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
-  const button =
-    "border-1 text-xs border-background bg-background hover:border-1 transition-all hover:border-background hover:bg-secondary hover:text-primary hover:transition-all";
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState("");
-  const [generateNew, setGenerateNew] = useState(false);
+  // const button =
+  //   "border-1 text-xs border-background bg-background hover:border-1 transition-all hover:border-background hover:bg-secondary hover:text-primary hover:transition-all";
+  // const [loading, setLoading] = useState(false);
+  // const [response, setResponse] = useState("");
+  // const [generateNew, setGenerateNew] = useState(false);
 
   useEffect(() => {
     setChecked(task.completed);
@@ -103,13 +103,13 @@ export const DisplayTasks = ({
     });
   };
 
-  const callHandleGeminiSave = () => {
-    handleGeminiSave({
-      response,
-      dispatch,
-      task,
-    });
-  };
+  // const callHandleGeminiSave = () => {
+  //   handleGeminiSave({
+  //     response,
+  //     dispatch,
+  //     task,
+  //   });
+  // };
 
   const handleDelete = () => {
     deleteTask(task.id, dispatch);
@@ -120,7 +120,7 @@ export const DisplayTasks = ({
       className="outer-display-task w-full flex items-center justify-center sm:p-2 transition-all duration-300 ease-in-out text-[var(--text-color)] sm:gap-5 gap-2"
       ref={outerRef}
     >
-      <div
+      {/* <div
         className="hidden sm:flex relative gemini-svg w-auto h-auto rounded-3xl p-[4px] sm:p-1 z-0 cursor-pointer transition-transform duration-300 ease-in-out sm:hover:scale-110 shadow-lg "
         onClick={(e) =>
           invokeGemini({
@@ -136,7 +136,7 @@ export const DisplayTasks = ({
         <div className="gemini-svg-inner w-[25px] sm:w-[22px] z-10 bg-gray-200 sm:rounded-3xl rounded-full p-1">
           <GeminiSVG />
         </div>
-      </div>
+      </div> */}
 
       <div
         className={cn(
@@ -223,7 +223,7 @@ export const DisplayTasks = ({
           </div>
         </div>
 
-        {task.Gemini_ID && !generateNew ? (
+        {/* {task.Gemini_ID && !generateNew ? (
           <GeminiHTMLViewer url={task.Gemini_ID} />
         ) : (
           <>
@@ -247,7 +247,7 @@ export const DisplayTasks = ({
               </>
             )}
           </>
-        )}
+        )} */}
       </div>
     </div>
   );

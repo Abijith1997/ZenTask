@@ -29,7 +29,6 @@ export const DateTimePicker = ({
     if (selectedDate) {
       setDate(selectedDate);
     }
-    console.log(selectedDate);
   };
 
   const handleTimeChange = (
@@ -51,14 +50,9 @@ export const DateTimePicker = ({
         );
       }
       setDate(newDate);
-      console.log(newDate);
       setSelectedTime(format(newDate, "MM/dd/yyyy hh:mm aa"));
     }
   };
-
-  React.useEffect(() => {
-    console.log("Popover open state:", isOpen);
-  }, [isOpen]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

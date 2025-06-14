@@ -11,3 +11,14 @@ export const taskSchema = z.object({
   completed: z.boolean().optional(),
   created_at: z.string().optional(),
 });
+
+export const userSchema = z.object({
+  id: z.string(),
+  created_at: z.string(),
+  email: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  display_name: z.string(),
+  phone: z.string().optional(),
+  avatar_url: z.string().optional(),
+});

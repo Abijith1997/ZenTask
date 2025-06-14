@@ -8,6 +8,7 @@ import { Login } from "./Pages/Login_Page/login";
 import { Home } from "./Pages/Home/Home";
 import { store } from "./Store";
 import { Layout } from "./components/Layout"; // create this
+import { GetDetails } from "./Pages/Login_Page/Get_Details/GetDetails";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -20,7 +21,6 @@ function App() {
         setUser(null);
         return;
       }
-
       const { data, error } = await supabase.auth.getUser();
       if (error) {
         console.error("Error fetching user:", error.message);
@@ -35,6 +35,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/get-details" element={<GetDetails />} />
           <Route path="/" element={user ? <Layout /> : <Login />}>
             {user && <Route index element={<Home user={user} />} />}
           </Route>

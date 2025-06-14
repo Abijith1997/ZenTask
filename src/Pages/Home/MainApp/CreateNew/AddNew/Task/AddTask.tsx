@@ -80,7 +80,6 @@ export const AddTask = ({
   const onSubmit = async (data: z.infer<typeof taskSchema>) => {
     if (user) {
       try {
-        console.log("inside try block");
         const newTask: Task = {
           id: crypto.randomUUID(),
           uid: user.id,
@@ -96,9 +95,7 @@ export const AddTask = ({
 
         dispatch(insertTasks(newTask));
         setClicked(false);
-      } catch (err: unknown) {
-        console.error("Error adding task:", err);
-      }
+      } catch (err: unknown) {}
     }
   };
 
@@ -106,7 +103,6 @@ export const AddTask = ({
     if (selectedTime) {
       const formatted = new Date(selectedTime).toISOString(); // ISO string format
       setFormattedTime(formatted);
-      console.log("Formatted Time: ", formatted); // Log the formatted time
     }
   }, [selectedTime]);
 

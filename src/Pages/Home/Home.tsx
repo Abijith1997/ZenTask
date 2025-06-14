@@ -7,8 +7,9 @@ import { LeftBar } from "../Leftbar/Leftbar";
 import { Navbar } from "../Navbar/Navbar";
 import { MainApp } from "./MainApp/MainApp";
 import { NotePage } from "./MainApp/NotePage/NotePage";
-import { Profile } from "../Profile/Profile";
 import { setNotes } from "@/Slices/NoteSlice";
+import { setUser } from "@/Slices/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 export const Home = ({ user }: { user: User }) => {
   const [currentPage, setCurrentPage] = useState<string>("Main");
@@ -16,26 +17,7 @@ export const Home = ({ user }: { user: User }) => {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      console.log("fetching notes");
-      const { data, error } = await supabase
-        .from("Notes")
-        .select()
-        .eq("uuid", user.id)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching notes:", error);
-        return;
-      }
-
-      dispatch(setNotes(data));
-    };
-
-    fetchNotes();
-  }, [user]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getTasks = async () => {
@@ -51,14 +33,50 @@ export const Home = ({ user }: { user: User }) => {
         setLoading(false); // Set loading to false once tasks are fetched
       }
     };
+    const fetchNotes = async () => {
+      const { data, error } = await supabase
+        .from("Notes")
+        .select()
+        .eq("uuid", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching notes:", error);
+        return;
+      }
+
+      dispatch(setNotes(data));
+    };
+
+    const fetchUserData = async () => {
+      const { data, error } = await supabase
+        .from("Users")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle(); // instead of .single()
+
+      if (error) {
+        console.error("Error fetching user:", error);
+        return;
+      }
+
+      if (!data) {
+        console.warn("No user found, redirecting...");
+        navigate("/get-details"); // or any fallback route
+        return;
+      }
+
+      dispatch(setUser(data));
+    };
 
     getTasks();
+    fetchNotes();
+    fetchUserData();
   }, [user]);
 
   useEffect(() => {
     const mainApp = document.querySelector(".main-app");
     const NotePage = document.querySelector(".note-page");
-    const ProfilePage = document.querySelector(".profile-page");
 
     switch (currentPage) {
       case "Main": {
@@ -69,18 +87,15 @@ export const Home = ({ user }: { user: User }) => {
       case "Note": {
         NotePage?.classList.remove("inactive");
         mainApp?.classList.add("inactive");
-        ProfilePage?.classList.add("hidden");
         break;
       }
       case "Profile": {
         mainApp?.classList.add("inactive");
         NotePage?.classList.add("inactive");
-        ProfilePage?.classList.remove("hidden");
         break;
       }
       default:
         NotePage?.classList.add("inactive");
-        ProfilePage?.classList.add("hidden");
     }
   }, [currentPage]);
 
@@ -112,8 +127,6 @@ export const Home = ({ user }: { user: User }) => {
             />
           ) : currentPage === "Note" ? (
             <NotePage />
-          ) : currentPage === "Profile" ? (
-            <Profile user={user} />
           ) : null}
         </div>
       </div>

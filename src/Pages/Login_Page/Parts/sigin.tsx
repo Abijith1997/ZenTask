@@ -35,10 +35,10 @@ export const SignIn = ({ isSignUpActive, setIsSignUpActive }: Props) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}`, // This ensures the OAuth flow uses a pop-up and doesn't redirect the user
+        redirectTo: `${window.location.origin}/get-details`, // This ensures the OAuth flow uses a pop-up and doesn't redirect the user
       },
     });
-    navigate("/");
+
     if (error) {
       console.log("Google sign-in error:", error);
       return { error };
@@ -52,7 +52,6 @@ export const SignIn = ({ isSignUpActive, setIsSignUpActive }: Props) => {
       console.error("Unable to sign in with Google.", error);
     } else {
       console.log("User signed in succesfully with Google.");
-      navigate("/");
     }
   };
   return (

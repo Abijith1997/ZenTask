@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Store";
 import { FloatingContainer } from "../Home/MainApp/CreateNew/Floating";
+import { ProfileView } from "../Profile/Profile";
 
 export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const [clicked, setClicked] = useState(false);
@@ -59,6 +60,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   const [open, setOpen] = useState(false);
   const [openDDM, setOpenDDM] = useState(false);
   const navigate = useNavigate();
+  const [profileOpened, setProfileOpened] = useState<boolean>(false);
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -75,25 +77,19 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
   };
 
   const handleProfile = () => {
-    setCurrentPage("Profile");
+    setProfileOpened(true);
     setOpen(false);
     setOpenDDM(false);
   };
 
   useEffect(() => {
-    console.log("Notes:", notes);
-  }, [notes]);
-
-  useEffect(() => {
     if (searchQuery) {
-      console.log("Search query:", searchQuery);
       const tempTasks = tasks.filter(
         (task) =>
           task.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           task.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredTasks(tempTasks.length > 0 ? tempTasks : []);
-      console.log(notes);
       const tempNotes = notes.filter(
         (note) =>
           note.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,10 +102,6 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
 
   useEffect(() => {
     if (!searchActive) return;
-
-    console.log("Search is active");
-    console.log(searchRef?.current);
-
     const deactivateSearch = () => {
       setSearchActive(false);
       setSearchQuery("");
@@ -156,12 +148,6 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
     setFilterOpen(!filterOpen);
   };
 
-  useEffect(() => {
-    if (searchActive) {
-      searchRef.current?.focus();
-    }
-  }, [searchActive]);
-
   const handleSearchClose = () => {
     document.querySelector(".search-input")?.classList.toggle("hidden");
     setSearchActive(!searchActive);
@@ -181,6 +167,15 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
 
   return (
     <>
+      {profileOpened && (
+        <div className="fixed top-[50%] h-screen w-screen left-[50%] -translate-x-1/2 -translate-y-1/2">
+          <ProfileView
+            user={user}
+            profileOpened={profileOpened}
+            setProfileOpened={setProfileOpened}
+          />
+        </div>
+      )}
       <FloatingContainer
         clicked={clicked}
         setSelectedTask={setSelectedTask}
@@ -503,12 +498,12 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
           {/* <div className="theme-container mr-[0.5rem] rounded-full">
             <ThemeToggle />
           </div> */}
-          <div className="dropdown p-3">
+          <div className="dropdown px-3">
             <DropdownMenu open={openDDM} onOpenChange={setOpenDDM}>
               <DropdownMenuTrigger asChild>
-                <div className="user-ddm cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 w-[2.2rem] rounded-full">
+                <div className="user-ddm cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 w-10 h-10 rounded-full flex items-center justify-center flex-col">
                   <Avatar>
-                    {user?.user_metadata?.avatar_url ? (
+                    {!user?.user_metadata?.avatar_url ? (
                       <>
                         <AvatarImage
                           className="rounded-full object-cover w-full h-full"
@@ -519,7 +514,7 @@ export const Navbar = ({ user, setCurrentPage }: NavbarProps) => {
                       </>
                     ) : (
                       <AvatarImage
-                        className="rounded-full object-cover w-full h-full"
+                        className="rounded-full object-cover w-10 h-10"
                         src={user?.user_metadata?.avatar_url}
                       />
                     )}

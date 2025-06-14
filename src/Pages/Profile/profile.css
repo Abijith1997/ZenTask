@@ -1,0 +1,13 @@
+.inner-profile::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(white, var(--secondary)) border-box;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  mask: linear-gradient(black) border-box,
+    linear-gradient(black) padding-box;
+  mask-composite: subtract;
+}
+
